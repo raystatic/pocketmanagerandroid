@@ -3,19 +3,25 @@ package com.example.pocketmanager.home.ui
 import android.app.Dialog
 import android.content.Context
 import android.text.TextUtils
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.lifecycle.ViewModel
 import com.example.pocketmanager.R
 import com.example.pocketmanager.home.model.Amount
 import com.example.pocketmanager.utils.Constants
+import com.example.pocketmanager.utils.LoaderInterface
 import com.example.pocketmanager.utils.Utility
 import com.google.firebase.database.DatabaseReference
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.HashMap
 
 
-class HomeViewModel: ViewModel() {
+class HomeViewModel: ViewModel(){
 
     fun showAddAmountDialog(context:Context, dbReference: DatabaseReference){
 
@@ -31,8 +37,11 @@ class HomeViewModel: ViewModel() {
         dialogButton.setOnClickListener {
             val totalAmount = etTotalAmount.text.toString().trim()
             if (!TextUtils.isEmpty(totalAmount)){
-                val amount = Amount(totalAmount)
-                addAmountToDb(amount, dbReference, context)
+                val today = Date().toString()
+                val balance = 0
+                val spent = 0
+                val amount = Amount(totalAmount, today, balance.toString(),spent.toString())
+                addAmountToDb(amount, dbReference, context, dialog, etTotalAmount)
             }
         }
 
@@ -40,7 +49,14 @@ class HomeViewModel: ViewModel() {
         dialog.setCanceledOnTouchOutside(true)
     }
 
-    private fun addAmountToDb(amount: Amount, dbReference: DatabaseReference, context:Context) {
+    private fun addAmountToDb(amount: Amount, dbReference: DatabaseReference, context:Context, dialog: Dialog, editText: EditText) {
+
+        val title = dialog.findViewById<TextView>(R.id.tv_title_add_amount)
+        title.text = "Updating... "
+
+        val progressBar = ProgressBar(context)
+        progressBar.visibility = View.VISIBLE
+
         val key = dbReference.child(Constants.AMOUNT).push().key
 
         val amountMap = amount.toMap()
@@ -50,6 +66,8 @@ class HomeViewModel: ViewModel() {
 
         dbReference.updateChildren(childUpdates)
             .addOnCompleteListener {
+                progressBar.visibility = View.GONE
+                dialog.cancel()
                 if (it.isSuccessful){
                     Utility.showToast(context,"Amount added")
                 }else{
