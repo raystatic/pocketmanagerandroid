@@ -3,7 +3,6 @@ package com.example.pocketmanager.home.ui
 import android.app.Dialog
 import android.content.Context
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -13,12 +12,10 @@ import androidx.lifecycle.ViewModel
 import com.example.pocketmanager.R
 import com.example.pocketmanager.home.model.Amount
 import com.example.pocketmanager.utils.Constants
-import com.example.pocketmanager.utils.LoaderInterface
+import com.example.pocketmanager.utils.PrefManager
 import com.example.pocketmanager.utils.Utility
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -56,10 +53,9 @@ class HomeViewModel: ViewModel(){
         val title = dialog.findViewById<TextView>(R.id.tv_title_add_amount)
         title.text = "Updating... "
 
-        val progressBar = ProgressBar(context)
-        progressBar.visibility = View.VISIBLE
+        val prefManager = PrefManager(context)
 
-        val key = dbReference.child(Constants.USER).push().key
+        var key = ""
 
         val amountMap = amount.toMap()
 
@@ -67,16 +63,21 @@ class HomeViewModel: ViewModel(){
 
         val user = FirebaseAuth.getInstance().currentUser
 
+        if (!TextUtils.isEmpty(prefManager.getString(Constants.ROOT_KEY))){
+            key = prefManager.getString(Constants.ROOT_KEY).toString()
+        }else{
+            key = dbReference.child(Constants.USER).push().key.toString()
+            prefManager.saveString(Constants.ROOT_KEY,key)
+        }
+
         childUpdates["/${user?.displayName}/$key"] = amountMap
 
         dbReference.updateChildren(childUpdates)
             .addOnCompleteListener {
-                progressBar.visibility = View.GONE
                 dialog.cancel()
                 if (it.isSuccessful){
                     Utility.showToast(context,"Amount added")
                 }else{
-                    Log.d("update_error",it.exception.toString())
                     Utility.showToast(context,"There was an error in updating amount")
                 }
             }

@@ -44,7 +44,6 @@ class RegisterActivity : AppCompatActivity(),
             if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
                 if (password.length>=8){
                     val username = email.replace(".","_")
-                    Utility.showToast(this,username)
                     register(email,password,username)
                 }else{
                     Toast.makeText(this,"Password should be of at least 8 characters",Toast.LENGTH_SHORT).show()
