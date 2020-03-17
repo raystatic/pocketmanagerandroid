@@ -1,4 +1,4 @@
-package com.example.pocketmanager
+package com.example.pocketmanager.authentication
 
 import android.app.ProgressDialog
 import android.content.Intent
@@ -6,13 +6,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProviders
+import com.example.pocketmanager.HomeActivity
+import com.example.pocketmanager.utils.LoaderInterface
+import com.example.pocketmanager.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_register.*
 
-class LoginActivity : AppCompatActivity(), LoaderInterface{
+class LoginActivity : AppCompatActivity(),
+    LoaderInterface {
 
     private var mAuth: FirebaseAuth?=null
     private var email:String = ""
@@ -27,7 +29,8 @@ class LoginActivity : AppCompatActivity(), LoaderInterface{
         progressDialog = ProgressDialog(this)
 
         tv_reg_login.setOnClickListener {
-            startActivity(Intent(this,RegisterActivity::class.java))
+            startActivity(Intent(this,
+                RegisterActivity::class.java))
             finish()
         }
 
@@ -63,7 +66,8 @@ class LoginActivity : AppCompatActivity(), LoaderInterface{
 
     private fun updateUI(user: FirebaseUser?) {
         if (user!=null){
-            startActivity(Intent(this@LoginActivity,HomeActivity::class.java))
+            startActivity(Intent(this@LoginActivity,
+                HomeActivity::class.java))
             finish()
         }
     }
