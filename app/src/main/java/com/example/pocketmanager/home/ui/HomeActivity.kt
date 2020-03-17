@@ -30,5 +30,9 @@ class HomeActivity : AppCompatActivity() {
             viewModel!!.showAddAmountDialog(this,dbReference)
         }
 
+        btn_add_transaction.setOnClickListener {
+            viewModel!!.showTransactionDialog(this,dbReference)
+        }
+
     }
 }

@@ -15,6 +15,13 @@
         android:text="Add total amount"
         android:layout_gravity="center"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_add_transaction"
+        android:text="Add a transaction"
+        android:layout_gravity="center"/>
+
 
 
 </LinearLayout>
