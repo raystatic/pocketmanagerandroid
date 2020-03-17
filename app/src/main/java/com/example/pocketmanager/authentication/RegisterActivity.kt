@@ -9,8 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.pocketmanager.home.ui.HomeActivity
 import com.example.pocketmanager.utils.LoaderInterface
 import com.example.pocketmanager.R
+import com.example.pocketmanager.utils.Utility
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.android.synthetic.main.activity_register.*
 
 
@@ -41,7 +43,9 @@ class RegisterActivity : AppCompatActivity(),
 
             if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
                 if (password.length>=8){
-                    register(email,password)
+                    val username = email.replace(".","_")
+                    Utility.showToast(this,username)
+                    register(email,password,username)
                 }else{
                     Toast.makeText(this,"Password should be of at least 8 characters",Toast.LENGTH_SHORT).show()
                 }
@@ -52,13 +56,25 @@ class RegisterActivity : AppCompatActivity(),
         }
     }
 
-    private fun register(email: String, password: String) {
+    private fun register(email: String, password: String, name:String) {
         mAuth?.createUserWithEmailAndPassword(email,password)
             ?.addOnCompleteListener {
                 if (it.isSuccessful){
-                    hideLoader()
                     val user = mAuth?.currentUser
-                    updateUi(user)
+                    val profileUpdates = UserProfileChangeRequest.Builder()
+                        .setDisplayName(name).build()
+
+                    user?.updateProfile(profileUpdates)
+                        ?.addOnCompleteListener {it1->
+                            hideLoader()
+                            if(it1.isSuccessful){
+                                updateUi(user)
+                            }else{
+                                hideLoader()
+                                Toast.makeText(this,"Registration Profile Update failed!",Toast.LENGTH_SHORT).show()
+                                updateUi(null)
+                            }
+                        }
                 }else{
                     hideLoader()
                     Toast.makeText(this,"Registration failed!",Toast.LENGTH_SHORT).show()

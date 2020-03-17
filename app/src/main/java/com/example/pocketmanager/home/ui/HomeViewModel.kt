@@ -3,6 +3,7 @@ package com.example.pocketmanager.home.ui
 import android.app.Dialog
 import android.content.Context
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -14,6 +15,7 @@ import com.example.pocketmanager.home.model.Amount
 import com.example.pocketmanager.utils.Constants
 import com.example.pocketmanager.utils.LoaderInterface
 import com.example.pocketmanager.utils.Utility
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -57,12 +59,15 @@ class HomeViewModel: ViewModel(){
         val progressBar = ProgressBar(context)
         progressBar.visibility = View.VISIBLE
 
-        val key = dbReference.child(Constants.AMOUNT).push().key
+        val key = dbReference.child(Constants.USER).push().key
 
         val amountMap = amount.toMap()
 
         val childUpdates = HashMap<String,Any>()
-        childUpdates["/amount/$key"] = amountMap
+
+        val user = FirebaseAuth.getInstance().currentUser
+
+        childUpdates["/${user?.displayName}/$key"] = amountMap
 
         dbReference.updateChildren(childUpdates)
             .addOnCompleteListener {
@@ -71,6 +76,7 @@ class HomeViewModel: ViewModel(){
                 if (it.isSuccessful){
                     Utility.showToast(context,"Amount added")
                 }else{
+                    Log.d("update_error",it.exception.toString())
                     Utility.showToast(context,"There was an error in updating amount")
                 }
             }
