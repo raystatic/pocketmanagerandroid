@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PocketManager</string>
+    <string name="already_member"><u>Already a member? Login Here</u></string>
+    <string name="new_member"><u>New user? Register Here</u></string>
 </resources>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "430723959822",
+    "firebase_url": "https://pocketmanager-74dbf.firebaseio.com",
+    "project_id": "pocketmanager-74dbf",
+    "storage_bucket": "pocketmanager-74dbf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430723959822:android:61d18e7d74dd6afb8bc05f",
+        "android_client_info": {
+          "package_name": "com.example.pocketmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430723959822-o9qc2g6rpnfpjkomuc4vq0toccf8tu7g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pocketmanager",
+            "certificate_hash": "d69e17fab833ecdd16b6c2b7abbfcf3b3e19196a"
+          }
+        },
+        {
+          "client_id": "430723959822-oin32la5uehejj32vfh48v7qkjdkhpjk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnTnXgIHwazlJHBB_4CRLCbSSikyewChU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "430723959822-oin32la5uehejj32vfh48v7qkjdkhpjk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

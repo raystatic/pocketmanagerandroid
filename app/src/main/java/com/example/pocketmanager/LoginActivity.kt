@@ -1,0 +1,80 @@
+package com.example.pocketmanager
+
+import android.app.ProgressDialog
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.text.TextUtils
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.activity_login.*
+
+class LoginActivity : AppCompatActivity(), LoaderInterface{
+
+    private var mAuth: FirebaseAuth?=null
+    private var email:String = ""
+    private var password:String = ""
+    private var progressDialog : ProgressDialog?=null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_login)
+
+        mAuth = FirebaseAuth.getInstance()
+        progressDialog = ProgressDialog(this)
+
+        btn_login.setOnClickListener {
+            email = et_email_login.text.toString().trim()
+            password = et_password_login.text.toString().trim()
+
+            if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
+                login(email,password)
+            }else{
+                Toast.makeText(this,"Please fill credentials carefully",Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+    }
+
+    private fun login(email: String, password: String) {
+        mAuth?.signInWithEmailAndPassword(email,password)
+            ?.addOnCompleteListener {
+                if(it.isSuccessful){
+                    val user = mAuth?.currentUser
+                    updateUI(user)
+                }else{
+                    Toast.makeText(this,"Login failed",Toast.LENGTH_SHORT).show()
+                    updateUI(null)
+                }
+            }
+    }
+
+    private fun updateUI(user: FirebaseUser?) {
+        if (user!=null){
+            startActivity(Intent(this@LoginActivity,HomeActivity::class.java))
+            finish()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val user = mAuth?.currentUser
+        if(user!=null){
+            updateUI(user)
+        }
+    }
+
+    override fun showLoader() {
+        progressDialog?.setMessage("Logging In...")
+        progressDialog?.show()
+    }
+
+    override fun hideLoader() {
+        if(progressDialog!=null && progressDialog?.isShowing!!){
+            progressDialog?.hide()
+        }
+    }
+}
