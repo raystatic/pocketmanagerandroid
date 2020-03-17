@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.pocketmanager.HomeActivity
+import com.example.pocketmanager.home.ui.HomeActivity
 import com.example.pocketmanager.utils.LoaderInterface
 import com.example.pocketmanager.R
 import com.google.firebase.auth.FirebaseAuth
