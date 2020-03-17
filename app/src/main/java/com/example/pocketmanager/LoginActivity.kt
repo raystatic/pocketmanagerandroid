@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_register.*
 
 class LoginActivity : AppCompatActivity(), LoaderInterface{
 
@@ -25,7 +26,13 @@ class LoginActivity : AppCompatActivity(), LoaderInterface{
         mAuth = FirebaseAuth.getInstance()
         progressDialog = ProgressDialog(this)
 
+        tv_reg_login.setOnClickListener {
+            startActivity(Intent(this,RegisterActivity::class.java))
+            finish()
+        }
+
         btn_login.setOnClickListener {
+            showLoader()
             email = et_email_login.text.toString().trim()
             password = et_password_login.text.toString().trim()
 
@@ -43,9 +50,11 @@ class LoginActivity : AppCompatActivity(), LoaderInterface{
         mAuth?.signInWithEmailAndPassword(email,password)
             ?.addOnCompleteListener {
                 if(it.isSuccessful){
+                    hideLoader()
                     val user = mAuth?.currentUser
                     updateUI(user)
                 }else{
+                    hideLoader()
                     Toast.makeText(this,"Login failed",Toast.LENGTH_SHORT).show()
                     updateUI(null)
                 }
