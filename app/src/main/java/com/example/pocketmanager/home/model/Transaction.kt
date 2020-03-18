@@ -9,6 +9,7 @@ class Transaction(var amount: String?=null,
                   var reciever:String?=null,
                   var sender:String?=null,
                   var date:String?=null,
+                  var type:String?=null,
                   var mode:String?=null
                   ) {
 
@@ -21,6 +22,7 @@ class Transaction(var amount: String?=null,
             "reciever" to reciever,
             "sender" to sender,
             "date" to date,
+            "type" to type,
             "mode" to mode
         )
     }

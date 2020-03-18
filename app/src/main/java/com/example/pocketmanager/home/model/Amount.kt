@@ -7,6 +7,8 @@ import java.util.*
 @IgnoreExtraProperties
 data class Amount(var amount: String, var date: String, var balance: String, var spent:String){
 
+    constructor():this("","","","")
+
     @Exclude
     fun toMap() : Map<String, Any?>{
         return mapOf(
