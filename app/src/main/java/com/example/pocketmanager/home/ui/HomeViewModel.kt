@@ -27,7 +27,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
-class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
+class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, TransactionsRecyclerViewAdapter.TransactionInteractor{
 
     var EXPENDITURE_TYPE = ""
 
@@ -325,12 +325,11 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
                         transactions.add(transaction!!)
                     }
 
-                    val adapter = TransactionsRecyclerViewAdapter(context,transactions)
+                    val adapter = TransactionsRecyclerViewAdapter(context,transactions, this@HomeViewModel)
                     val layoutManager = LinearLayoutManager(context)
                     recyclerView.layoutManager = layoutManager
                     recyclerView.adapter = adapter
 
-                    //Utility.showToast(context,"Transactions read! ${transactions.size}")
                 }
             })
 
@@ -367,4 +366,51 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
 
     }
 
+    override fun onTransactionClicked(transaction: Transaction, context: Context) {
+        showTransactionInfoDialog(transaction,context)
+    }
+
+    private fun showTransactionInfoDialog(transaction: Transaction,context: Context) {
+        val dialog = Dialog(context)
+        dialog.setContentView(R.layout.transaction_dialog)
+
+        val button  = dialog.findViewById<Button>(R.id.btn_ok_transaction)
+        val tvAmount = dialog.findViewById<TextView>(R.id.tv_transaction_amount)
+        val tvDebit = dialog.findViewById<TextView>(R.id.tv_transaction_debit)
+        val tvDate = dialog.findViewById<TextView>(R.id.tv_transaction_date)
+        val tvMode = dialog.findViewById<TextView>(R.id.tv_transaction_mode)
+        val tvReceiver = dialog.findViewById<TextView>(R.id.tv_transaction_receiver)
+        val tvSender = dialog.findViewById<TextView>(R.id.tv_transaction_sender)
+        val tvDescription = dialog.findViewById<TextView>(R.id.tv_transaction_desc)
+        val linSender = dialog.findViewById<LinearLayout>(R.id.lin_sender_transaction)
+        val linReceiver = dialog.findViewById<LinearLayout>(R.id.lin_transaction_receiver)
+        val tvType = dialog.findViewById<TextView>(R.id.tv_transaction_type)
+
+        val window = dialog.window
+        window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT)
+
+        tvAmount.text = transaction.amount
+        tvDebit.text = transaction.debit.toString()
+        tvDate.text = Utility.formatDate(transaction.date)
+        tvMode.text = transaction.mode
+        tvDescription.text = transaction.note
+        tvReceiver.text = transaction.reciever
+        tvSender.text = transaction.sender
+        tvType.text = transaction.type
+
+        if (transaction.debit!!){
+            linSender.visibility = View.GONE
+            linReceiver.visibility = View.VISIBLE
+        }else{
+            linSender.visibility = View.VISIBLE
+            linReceiver.visibility = View.GONE
+        }
+
+        button.setOnClickListener {
+            dialog.cancel()
+        }
+
+        dialog.show()
+        dialog.setCanceledOnTouchOutside(true)
+    }
 }

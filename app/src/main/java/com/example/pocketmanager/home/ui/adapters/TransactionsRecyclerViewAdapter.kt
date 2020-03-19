@@ -12,7 +12,8 @@ import com.example.pocketmanager.utils.Utility
 
 
 class TransactionsRecyclerViewAdapter(var context:Context,
-                                      var transactions:ArrayList<Transaction>) :
+                                      var transactions:ArrayList<Transaction>,
+                                      var listener: TransactionInteractor) :
     RecyclerView.Adapter<TransactionsRecyclerViewAdapter.TransactionsViewHolder>() {
 
 
@@ -27,18 +28,14 @@ class TransactionsRecyclerViewAdapter(var context:Context,
     }
 
     override fun onBindViewHolder(holder: TransactionsViewHolder, position: Int) {
-        holder.bindView(transactions[position], context)
+        holder.bindView(transactions[position], context, listener)
     }
 
     class TransactionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvAmount = itemView.findViewById<TextView>(R.id.tv_amount_transaction)
         private val tvDate = itemView.findViewById<TextView>(R.id.tv_date_transaction)
-      //  private val tvMode = itemView.findViewById<TextView>(R.id.tv_mode_transaction)
-      //  private val tvReceiver = itemView.findViewById<TextView>(R.id.tv_receiver_transaction)
-       // private val tvSender = itemView.findViewById<TextView>(R.id.tv_sender_transaction)
-      //  private val tvType = itemView.findViewById<TextView>(R.id.tv_type_transaction)
 
-        fun bindView(transaction: Transaction, context: Context){
+        fun bindView(transaction: Transaction, context: Context, listener: TransactionInteractor){
             tvAmount.text =transaction.amount
             tvDate.text = Utility.formatDate(transaction.date)
 
@@ -48,12 +45,16 @@ class TransactionsRecyclerViewAdapter(var context:Context,
                 tvAmount.setTextColor(context.resources.getColor(R.color.green))
             }
 
-           // tvMode.text = transaction.mode
-        //    tvReceiver.text = transaction.reciever
-         //   tvSender.text = transaction.sender
-           // tvType.text = transaction.type
+            itemView.setOnClickListener {
+                listener.onTransactionClicked(transaction,context)
+            }
+
         }
 
+    }
+
+    interface TransactionInteractor{
+        fun onTransactionClicked(transaction: Transaction, context: Context)
     }
 
 }
