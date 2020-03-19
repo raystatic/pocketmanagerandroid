@@ -11,7 +11,7 @@ class Utility {
 
         fun formatDate (date : String?): String {
             val dateList = date?.split(" ")
-            return "${dateList?.get(0)} ${dateList?.get(1)} ${dateList?.get(2)}"
+            return "${dateList?.get(0)} ${dateList?.get(1)} ${dateList?.get(2)} ${dateList?.get(5)}"
         }
 
     }

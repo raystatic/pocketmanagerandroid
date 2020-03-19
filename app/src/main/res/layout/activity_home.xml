@@ -45,13 +45,12 @@
             android:textColor="#000"
             android:textSize="20sp"/>
 
-<!--        <include layout="@layout/transactions_header_layout"/>-->
+        <include layout="@layout/transactions_header_layout"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#000"
-            android:layout_marginTop="10dp"/>
+            android:background="#000"/>
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

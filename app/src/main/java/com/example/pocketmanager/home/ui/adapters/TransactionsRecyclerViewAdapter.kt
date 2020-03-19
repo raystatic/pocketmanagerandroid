@@ -27,24 +27,31 @@ class TransactionsRecyclerViewAdapter(var context:Context,
     }
 
     override fun onBindViewHolder(holder: TransactionsViewHolder, position: Int) {
-        holder.bindView(transactions[position])
+        holder.bindView(transactions[position], context)
     }
 
     class TransactionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvAmount = itemView.findViewById<TextView>(R.id.tv_amount_transaction)
         private val tvDate = itemView.findViewById<TextView>(R.id.tv_date_transaction)
-        private val tvMode = itemView.findViewById<TextView>(R.id.tv_mode_transaction)
-        private val tvReceiver = itemView.findViewById<TextView>(R.id.tv_receiver_transaction)
-        private val tvSender = itemView.findViewById<TextView>(R.id.tv_sender_transaction)
-        private val tvType = itemView.findViewById<TextView>(R.id.tv_type_transaction)
+      //  private val tvMode = itemView.findViewById<TextView>(R.id.tv_mode_transaction)
+      //  private val tvReceiver = itemView.findViewById<TextView>(R.id.tv_receiver_transaction)
+       // private val tvSender = itemView.findViewById<TextView>(R.id.tv_sender_transaction)
+      //  private val tvType = itemView.findViewById<TextView>(R.id.tv_type_transaction)
 
-        fun bindView(transaction: Transaction){
+        fun bindView(transaction: Transaction, context: Context){
             tvAmount.text =transaction.amount
             tvDate.text = Utility.formatDate(transaction.date)
-            tvMode.text = transaction.mode
-            tvReceiver.text = transaction.reciever
-            tvSender.text = transaction.sender
-            tvType.text = transaction.type
+
+            if (transaction.debit!!){
+                tvAmount.setTextColor(context.resources.getColor(R.color.red))
+            }else{
+                tvAmount.setTextColor(context.resources.getColor(R.color.green))
+            }
+
+           // tvMode.text = transaction.mode
+        //    tvReceiver.text = transaction.reciever
+         //   tvSender.text = transaction.sender
+           // tvType.text = transaction.type
         }
 
     }

@@ -117,7 +117,7 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
 
         etDate.setText(Utility.formatDate(Date().toString()))
 
-        etSender.setText("me")
+        //etSender.setText("me")
 
         val window = dialog.window
         window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT)
@@ -131,7 +131,15 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
             val desc = etDesc.text.toString().trim()
             val type = EXPENDITURE_TYPE
 
-            val transaction = Transaction(amount,desc,receiver,sender,date,type,mode)
+            var debit = false
+
+            if (receiver.isNotEmpty()) {
+                debit = true
+            }else if (sender.isNotEmpty()){
+                debit = false
+            }
+
+            val transaction = Transaction(amount,desc,receiver,sender,date,type,mode,debit)
 
             addTransactionToDB(context,transaction,dbReference,dialog)
 
@@ -172,7 +180,7 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
 
                 val netBalance = amount.balance.toDouble()
 
-                if (!reciever.isNullOrEmpty()) {
+                if (transaction.debit!!) {
                     val spent = transaction.amount?.toDouble()
 
                     val balance = netBalance - spent!!
@@ -181,7 +189,7 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
 
                     amount.spent = (amount.spent.toDouble() + spent).toString()
 
-                }else if (!sender.isNullOrEmpty()){
+                }else{
                     val received = transaction.amount?.toDouble()
                     val balance = netBalance + received!!
 

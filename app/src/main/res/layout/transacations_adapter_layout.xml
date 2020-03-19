@@ -7,39 +7,64 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="2"
         android:background="#000">
 
-        <LinearLayout
-            android:layout_height="match_parent"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:weightSum="6"
-            android:orientation="horizontal"
-            android:background="#000"
-            android:layout_weight="0.05">
+            android:layout_height="39dp">
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:id="@+id/center_bar_transaction"/>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:background="#fff"
-                android:layout_marginEnd="1dp">
+                android:orientation="vertical"
+                android:layout_marginStart="1dp"
+                android:layout_toStartOf="@+id/center_bar_transaction">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Amount (Rs.)"
+                    android:textColor="@color/colorPrimary"
+                    android:id="@+id/amount_header"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    android:layout_gravity="center_horizontal"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Amount"
                     android:textColor="#000"
-                    android:id="@+id/tv_amount_transaction"
-                    android:layout_centerInParent="true"/>
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"
+                    android:id="@+id/tv_amount_transaction"/>
+
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:background="#fff"
-                android:layout_marginEnd="1dp">
+                android:orientation="vertical"
+                android:layout_marginEnd="1dp"
+                android:layout_toEndOf="@+id/center_bar_transaction">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:textColor="@color/colorPrimary"
+                    android:id="@+id/date_header"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    android:layout_gravity="center_horizontal"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -50,75 +75,12 @@
                     android:layout_centerInParent="true"/>
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:layout_marginEnd="1dp">
+        </RelativeLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Amount"
-                    android:textColor="#000"
-                    android:id="@+id/tv_mode_transaction"
-                    android:layout_centerInParent="true"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:layout_marginEnd="1dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Amount"
-                    android:textColor="#000"
-                    android:id="@+id/tv_receiver_transaction"
-                    android:layout_centerInParent="true"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#fff">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Amount"
-                    android:textColor="#000"
-                    android:id="@+id/tv_sender_transaction"
-                    android:layout_centerInParent="true"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:layout_marginStart="1dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Amount"
-                    android:textColor="#000"
-                    android:id="@+id/tv_type_transaction"
-                    android:layout_centerInParent="true"/>
-            </RelativeLayout>
-
-        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.95"/>
+            android:layout_height="1dp"/>
 
     </LinearLayout>
 

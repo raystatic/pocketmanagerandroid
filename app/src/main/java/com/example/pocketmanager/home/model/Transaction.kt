@@ -10,7 +10,8 @@ class Transaction(var amount: String?=null,
                   var sender:String?=null,
                   var date:String?=null,
                   var type:String?=null,
-                  var mode:String?=null
+                  var mode:String?=null,
+                  var debit:Boolean?=false
                   ) {
 
 
@@ -23,7 +24,8 @@ class Transaction(var amount: String?=null,
             "sender" to sender,
             "date" to date,
             "type" to type,
-            "mode" to mode
+            "mode" to mode,
+            "debit" to debit
         )
     }
 
