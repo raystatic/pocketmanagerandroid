@@ -111,18 +111,18 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
 
         val btnAdd = dialog.findViewById<Button>(R.id.btn_add_transaction_confrm)
 
-        etDate.setText(Date().toString())
+        etDate.setText(Utility.formatDate(Date().toString()))
 
         etSender.setText("me")
 
         val window = dialog.window
-        window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT)
+        window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT)
 
         btnAdd.setOnClickListener {
             val amount = etAmount.text.toString().trim()
             val receiver = etReceiver.text.toString().trim()
             val sender = etSender.text.toString().trim()
-            val date = etDate.text.toString().trim()
+            val date = Date().toString()
             val mode = etMode.text.toString().trim()
             val desc = etDesc.text.toString().trim()
             val type = EXPENDITURE_TYPE
