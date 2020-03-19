@@ -32,5 +32,11 @@ class HomeActivity : AppCompatActivity() {
             viewModel!!.showTransactionDialog(this,dbReference)
         }
 
+        info_card_action_bar.setOnClickListener {
+            viewModel!!.showInfoDialog(this,dbReference)
+        }
+
+        viewModel!!.readBalancefromDB(this,dbReference,tv_balance_action_bar)
+
     }
 }

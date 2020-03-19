@@ -2,6 +2,7 @@ package com.example.pocketmanager.home.ui
 
 import android.app.Dialog
 import android.content.Context
+import android.icu.util.LocaleData
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -16,6 +17,8 @@ import com.example.pocketmanager.utils.PrefManager
 import com.example.pocketmanager.utils.Utility
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -25,6 +28,66 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
     var EXPENDITURE_TYPE = ""
 
     val typeList = arrayOf("Self","Home")
+
+    fun readBalancefromDB(context: Context,dbReference: DatabaseReference, textView: TextView){
+        readAmountFromDB(context,dbReference,null, textView)
+    }
+
+
+    fun showInfoDialog(context: Context,dbReference: DatabaseReference){
+        val dialog = Dialog(context)
+        dialog.setContentView(R.layout.info_dialog_layout)
+
+        readAmountFromDB(context,dbReference, dialog, null)
+
+        val button  = dialog.findViewById<Button>(R.id.btn_ok_summary)
+
+        val window = dialog.window
+        window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT)
+
+        button.setOnClickListener {
+            dialog.cancel()
+        }
+
+        dialog.show()
+        dialog.setCanceledOnTouchOutside(true)
+
+    }
+
+    private fun readAmountFromDB(context: Context, dbReference: DatabaseReference, dialog: Dialog?, textView: TextView?) {
+
+        val prefManager = PrefManager(context)
+        val rootKey = prefManager.getString(Constants.ROOT_KEY)
+        val user = FirebaseAuth.getInstance().currentUser
+
+        val amountListener =   object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Utility.showToast(context,"Unable to refresh right now!")
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val amount = p0.getValue(Amount::class.java)
+
+                if (dialog!=null && textView == null){
+                    val tvTotalAmount = dialog.findViewById<TextView>(R.id.tv_total_amount)
+                    val tvBalanceAmount = dialog.findViewById<TextView>(R.id.tv_balance_amount)
+                    val tvSpentAmount = dialog.findViewById<TextView>(R.id.tv_spent_amount)
+                    val tvDateUpdated = dialog.findViewById<TextView>(R.id.tv_date_updation)
+
+                    tvTotalAmount.text = amount?.amount
+                    tvBalanceAmount.text = amount?.balance
+                    tvDateUpdated.text = Utility.formatDate(amount?.date)
+                    tvSpentAmount.text = amount?.spent
+
+                }else if (dialog == null && textView!=null) {
+                    textView.text = amount?.balance
+                }
+            }
+        }
+
+        dbReference.child("/${user?.displayName}/$rootKey").addValueEventListener(amountListener)
+
+    }
 
     fun showTransactionDialog(context: Context, dbReference: DatabaseReference){
         val dialog = Dialog(context)
@@ -65,8 +128,6 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
             val type = EXPENDITURE_TYPE
 
             val transaction = Transaction(amount,desc,receiver,sender,date,type,mode)
-
-         //   addTransactionToDb(context,transaction, dbReference, dialog)
 
             addTransactionToDB(context,transaction,dbReference,dialog)
 
