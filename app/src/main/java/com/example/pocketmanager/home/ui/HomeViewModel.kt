@@ -9,9 +9,12 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.*
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketmanager.R
 import com.example.pocketmanager.home.model.Amount
 import com.example.pocketmanager.home.model.Transaction
+import com.example.pocketmanager.home.ui.adapters.TransactionsRecyclerViewAdapter
 import com.example.pocketmanager.utils.Constants
 import com.example.pocketmanager.utils.PrefManager
 import com.example.pocketmanager.utils.Utility
@@ -20,6 +23,7 @@ import com.google.firebase.database.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
@@ -153,7 +157,7 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
         dbReference.child("/${user?.displayName}/$rootKey").runTransaction(object : com.google.firebase.database.Transaction.Handler{
 
             override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
-                Log.d("transaction_error","${p0?.message}")
+                Log.d("transaction_error","${p0}")
                 Utility.showToast(context,"Transaction competed with ${p0?.message}")
             }
 
@@ -219,7 +223,7 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
         val user = FirebaseAuth.getInstance().currentUser
 
         childUpdates["/${user?.displayName}/transactions/$key"] = transactionMap
-
+//
         dbReference.updateChildren(childUpdates)
             .addOnCompleteListener {
                 dialog.cancel()
@@ -229,7 +233,6 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
                     Utility.showToast(context,"There was an error in adding transaction")
                 }
             }
-
 
     }
 
@@ -291,6 +294,68 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener{
                     Utility.showToast(context,"There was an error in updating amount")
                 }
             }
+
+    }
+
+    fun readTransactions(context: Context, dbReference: DatabaseReference, recyclerView: RecyclerView) {
+        val prefManager = PrefManager(context)
+        val user = FirebaseAuth.getInstance().currentUser
+        val rootKey = prefManager.getString(Constants.ROOT_KEY)
+
+        val transactions = ArrayList<Transaction>()
+
+        dbReference.child("/${user?.displayName}/transactions/")
+            .addValueEventListener(object : ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+                    Utility.showToast(context,"Unable to read transactions!")
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    transactions.clear()
+                    p0.children.forEach {
+                        val transaction = it.getValue(Transaction::class.java)
+                        transactions.add(transaction!!)
+                    }
+
+                    val adapter = TransactionsRecyclerViewAdapter(context,transactions)
+                    val layoutManager = LinearLayoutManager(context)
+                    recyclerView.layoutManager = layoutManager
+                    recyclerView.adapter = adapter
+
+                    //Utility.showToast(context,"Transactions read! ${transactions.size}")
+                }
+            })
+
+//                val childEventListener  = object : ChildEventListener{
+//            override fun onCancelled(p0: DatabaseError) {
+//                Utility.showToast(context,"Unable to read transactions!")
+//            }
+//
+//            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+//
+//            }
+//
+//            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+//
+//            }
+//
+//            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+//                transactions.clear()
+//                p0.children.forEach {
+//                    val transaction = it.getValue(Transaction::class.java)
+//                    transactions.add(transaction!!)
+//                }
+//
+//                Utility.showToast(context,"Transactions read! ${transactions.size}")
+//            }
+//
+//            override fun onChildRemoved(p0: DataSnapshot) {
+//
+//            }
+//        }
+//
+//        dbReference.child("/${user?.displayName}/transactions/")
+//            .addChildEventListener(childEventListener)
 
     }
 

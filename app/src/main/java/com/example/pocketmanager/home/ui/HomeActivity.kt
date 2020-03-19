@@ -38,5 +38,7 @@ class HomeActivity : AppCompatActivity() {
 
         viewModel!!.readBalancefromDB(this,dbReference,tv_balance_action_bar)
 
+        viewModel!!.readTransactions(this,dbReference,rv_transactions)
+
     }
 }

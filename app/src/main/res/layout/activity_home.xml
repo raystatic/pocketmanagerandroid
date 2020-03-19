@@ -32,4 +32,33 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Transactions"
+            android:textColor="#000"
+            android:textSize="20sp"/>
+
+<!--        <include layout="@layout/transactions_header_layout"/>-->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#000"
+            android:layout_marginTop="10dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rv_transactions"
+            tools:listitem="@layout/transacations_adapter_layout"/>
+
+
+    </LinearLayout>
+
 </LinearLayout>
