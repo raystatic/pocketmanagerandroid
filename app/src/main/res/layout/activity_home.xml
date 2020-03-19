@@ -5,23 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".home.ui.HomeActivity"
-    android:padding="10dp"
     android:orientation="vertical">
 
-    <Button
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_add_total_amount"
-        android:text="Add total amount"
-        android:layout_gravity="center"/>
+        android:elevation="10dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_add_transaction"
-        android:text="Add a transaction"
-        android:layout_gravity="center"/>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tool_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include layout="@layout/custom_home_action_bar_layout"/>
+
+
+            </RelativeLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
 
 </LinearLayout>

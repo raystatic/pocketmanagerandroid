@@ -1,17 +1,15 @@
 package com.example.pocketmanager.home.ui
 
-import android.app.Dialog
 import android.os.Bundle
-import android.text.TextUtils
-import android.widget.Button
-import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProviders
 import com.example.pocketmanager.R
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.custom_home_action_bar_layout.*
 
 
 class HomeActivity : AppCompatActivity() {
@@ -26,11 +24,11 @@ class HomeActivity : AppCompatActivity() {
 
         val dbReference = FirebaseDatabase.getInstance().reference
 
-        btn_add_total_amount.setOnClickListener {
+        update_amount_card_action_bar.setOnClickListener {
             viewModel!!.showAddAmountDialog(this,dbReference)
         }
 
-        btn_add_transaction.setOnClickListener {
+        add_transaction_card_action_bar.setOnClickListener {
             viewModel!!.showTransactionDialog(this,dbReference)
         }
 
