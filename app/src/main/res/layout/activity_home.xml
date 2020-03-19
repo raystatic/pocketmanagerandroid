@@ -57,6 +57,13 @@
             android:id="@+id/rv_transactions"
             tools:listitem="@layout/transacations_adapter_layout"/>
 
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/home_loader"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 

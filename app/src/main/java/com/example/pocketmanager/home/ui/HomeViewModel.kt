@@ -305,7 +305,7 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, Transactio
 
     }
 
-    fun readTransactions(context: Context, dbReference: DatabaseReference, recyclerView: RecyclerView) {
+    fun readTransactions(context: Context, dbReference: DatabaseReference, recyclerView: RecyclerView, progressBar: ProgressBar) {
         val prefManager = PrefManager(context)
         val user = FirebaseAuth.getInstance().currentUser
         val rootKey = prefManager.getString(Constants.ROOT_KEY)
@@ -316,6 +316,11 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, Transactio
             .addValueEventListener(object : ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
                     Utility.showToast(context,"Unable to read transactions!")
+
+                    if (progressBar.visibility == View.VISIBLE){
+                        progressBar.visibility = View.GONE
+                    }
+
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
@@ -329,6 +334,10 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, Transactio
                     val layoutManager = LinearLayoutManager(context)
                     recyclerView.layoutManager = layoutManager
                     recyclerView.adapter = adapter
+
+                    if (progressBar.visibility == View.VISIBLE){
+                        progressBar.visibility = View.GONE
+                    }
 
                 }
             })

@@ -1,6 +1,7 @@
 package com.example.pocketmanager.home.ui
 
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,8 @@ class HomeActivity : AppCompatActivity() {
 
         val dbReference = FirebaseDatabase.getInstance().reference
 
+        home_loader.visibility = View.VISIBLE
+
         update_amount_card_action_bar.setOnClickListener {
             viewModel!!.showAddAmountDialog(this,dbReference)
         }
@@ -38,7 +41,7 @@ class HomeActivity : AppCompatActivity() {
 
         viewModel!!.readBalancefromDB(this,dbReference,tv_balance_action_bar)
 
-        viewModel!!.readTransactions(this,dbReference,rv_transactions)
+        viewModel!!.readTransactions(this,dbReference,rv_transactions, home_loader)
 
     }
 }
