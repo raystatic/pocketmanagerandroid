@@ -9,11 +9,12 @@ import android.widget.Toast
 import com.example.pocketmanager.home.ui.HomeActivity
 import com.example.pocketmanager.utils.LoaderInterface
 import com.example.pocketmanager.R
+import com.example.pocketmanager.utils.BaseActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginActivity : AppCompatActivity(),
+class LoginActivity : BaseActivity(),
     LoaderInterface {
 
     private var mAuth: FirebaseAuth?=null

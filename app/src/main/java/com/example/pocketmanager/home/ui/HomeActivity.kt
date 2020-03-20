@@ -8,12 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProviders
 import com.example.pocketmanager.R
+import com.example.pocketmanager.utils.BaseActivity
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.custom_home_action_bar_layout.*
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
 
     private var viewModel : HomeViewModel?=null
 

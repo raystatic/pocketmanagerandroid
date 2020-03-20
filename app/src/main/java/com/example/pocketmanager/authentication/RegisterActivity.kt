@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.pocketmanager.home.ui.HomeActivity
 import com.example.pocketmanager.utils.LoaderInterface
 import com.example.pocketmanager.R
+import com.example.pocketmanager.utils.BaseActivity
 import com.example.pocketmanager.utils.Utility
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -16,7 +17,7 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.android.synthetic.main.activity_register.*
 
 
-class RegisterActivity : AppCompatActivity(),
+class RegisterActivity : BaseActivity(),
     LoaderInterface {
 
     private var mAuth: FirebaseAuth? = null

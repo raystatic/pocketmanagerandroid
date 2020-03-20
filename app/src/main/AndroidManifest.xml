@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.pocketmanager">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -11,19 +12,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".home.ui.HomeActivity"></activity>
-        <activity android:name=".authentication.LoginActivity" >
-
+        <activity android:name=".utils.BaseActivity"></activity>
+        <activity android:name=".home.ui.HomeActivity" />
+        <activity android:name=".authentication.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".authentication.RegisterActivity">
-
-        </activity>
+        <activity android:name=".authentication.RegisterActivity"></activity>
+        <service
+            android:exported="false"
+            android:name="com.novoda.merlin.MerlinService" />
     </application>
 
 </manifest>
