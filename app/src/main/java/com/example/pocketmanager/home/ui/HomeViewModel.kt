@@ -163,7 +163,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                     debit = false
                 }
 
-                val transaction = Transaction(amount,desc,receiver,sender,date,type,mode,debit)
+                val transaction = Transaction(amount,desc,receiver,sender,date,type,mode,debit, Date())
 
                 addTransactionToDB(context,transaction,dbReference,dialog)
             }
@@ -311,7 +311,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             if (!TextUtils.isEmpty(totalAmount)){
                 val today = Date().toString()
                 val spent = 0
-                val amount = Amount(totalAmount, today, totalAmount,spent.toString(),calendar.time)
+                val amount = Amount(totalAmount, today, totalAmount,spent.toString(),calendar.time, Date())
                 addAmountToDb(amount, dbReference, context, dialog, etTotalAmount)
             }
         }
@@ -349,6 +349,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                 dialog.cancel()
                 if (it.isSuccessful){
                     Utility.showToast(context,"Amount added")
+                    deleteEarlierTransactions(context,dbReference)
                 }else{
                     Utility.showToast(context,"There was an error in updating amount")
                 }
@@ -356,18 +357,57 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
     }
 
+    private fun deleteEarlierTransactions(context: Context, dbReference: DatabaseReference) {
+        val user  =FirebaseAuth.getInstance().currentUser
+        dbReference.child("${user?.displayName}/transactions")
+            .setValue(null)
+    }
+
     fun readTransactions(context: Context, dbReference: DatabaseReference, recyclerView: RecyclerView, progressBar: ProgressBar) {
         val user = FirebaseAuth.getInstance().currentUser
-        val adapter = TransactionsRecyclerViewAdapter(context, this@HomeViewModel, dbReference.child("/${user?.displayName}/transactions/"), progressBar)
-        val layoutManager = LinearLayoutManager(context)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = adapter
+
+        val transactions = ArrayList<Transaction>()
+
+        dbReference.child("/${user?.displayName}/transactions/")
+            .addValueEventListener(object : ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+                    Utility.showToast(context,"No transaction found for this month! canceled")
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    transactions.clear()
+                    if (!p0.exists()){
+                        if (progressBar.visibility == View.VISIBLE){
+                            progressBar.visibility = View.GONE
+                        }
+                        Utility.showToast(context,"No transaction found for this month!")
+                    }
+                    p0.children.forEach {
+                        val transaction = it.getValue(Transaction::class.java)
+                        if (Date().after(transaction?.transactDate)){
+                            transactions.add(transaction!!)
+                        }
+
+                        val adapter = TransactionsRecyclerViewAdapter(context, transactions, this@HomeViewModel)
+                        val layoutManager = LinearLayoutManager(context)
+                        recyclerView.layoutManager = layoutManager
+                        recyclerView.adapter = adapter
+
+                        if (progressBar.visibility == View.VISIBLE){
+                            progressBar.visibility = View.GONE
+                        }
+                    }
+                }
+            })
 
     }
 
-    override fun onTransactionsLoaded(progressBar: ProgressBar) {
+    override fun onTransactionsLoaded(progressBar: ProgressBar, msg:String?, context: Context) {
         if (progressBar.visibility == View.VISIBLE){
             progressBar.visibility = View.GONE
+            if (msg!=null){
+                Utility.showToast(context,msg)
+            }
         }
     }
 

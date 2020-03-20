@@ -14,46 +14,48 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class TransactionsRecyclerViewAdapter(var context:Context,
-                                      var listener: TransactionInteractor,
-                                      var transactionsReference: DatabaseReference,
-                                      var progressBar: ProgressBar) :
+                                      var transactions:ArrayList<Transaction>,
+                                      var listener:TransactionInteractor) :
     RecyclerView.Adapter<TransactionsRecyclerViewAdapter.TransactionsViewHolder>() {
 
 
-    private val childEventListener: ChildEventListener?
-
-    private val transactions = ArrayList<Transaction>()
+//    private val childEventListener: ChildEventListener?
 
     init {
-        val childEventListener  = object : ChildEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                Utility.showToast(context,"Unable to read transactions!")
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val transaction = p0.getValue(Transaction::class.java)
-                transactions.add(transaction!!)
-                notifyItemInserted(transactions.size - 1)
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-
-            }
-        }
-
-        transactionsReference.addChildEventListener(childEventListener)
-        this.childEventListener = childEventListener
+//        val childEventListener  = object : ChildEventListener {
+//            override fun onCancelled(p0: DatabaseError) {
+//                Utility.showToast(context,"Unable to read transactions!")
+//            }
+//
+//            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+//
+//            }
+//
+//            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+//
+//            }
+//
+//            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+//                val transaction = p0.getValue(Transaction::class.java)
+//                if (Date().after(transaction?.transactDate)){
+//                    transactions.add(transaction!!)
+//                    notifyItemInserted(transactions.size - 1)
+//                }
+//
+//            }
+//
+//            override fun onChildRemoved(p0: DataSnapshot) {
+//                notifyDataSetChanged()
+//            }
+//        }
+//
+//        transactionsReference.addChildEventListener(childEventListener)
+//        this.childEventListener = childEventListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionsViewHolder {
@@ -63,8 +65,7 @@ class TransactionsRecyclerViewAdapter(var context:Context,
     }
 
     override fun onBindViewHolder(holder: TransactionsViewHolder, position: Int) {
-        holder.bindView(transactions[position], context, listener)
-        listener.onTransactionsLoaded(progressBar)
+        holder.bindView(transactions[position], context,listener)
     }
 
     override fun getItemCount(): Int {
@@ -95,7 +96,7 @@ class TransactionsRecyclerViewAdapter(var context:Context,
 
     interface TransactionInteractor{
         fun onTransactionClicked(transaction: Transaction, context: Context)
-        fun onTransactionsLoaded(progressBar: ProgressBar)
+        fun onTransactionsLoaded(progressBar: ProgressBar, msg:String?, context: Context)
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.pocketmanager.home.model
 
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
+import java.util.*
 
 @IgnoreExtraProperties
 class Transaction(var amount: String?=null,
@@ -11,8 +12,8 @@ class Transaction(var amount: String?=null,
                   var date:String?=null,
                   var type:String?=null,
                   var mode:String?=null,
-                  var debit:Boolean?=false
-                  ) {
+                  var debit:Boolean?=false,
+                  var transactDate:Date?=Date()) {
 
 
     @Exclude
@@ -25,7 +26,8 @@ class Transaction(var amount: String?=null,
             "date" to date,
             "type" to type,
             "mode" to mode,
-            "debit" to debit
+            "debit" to debit,
+            "transactDate" to transactDate
         )
     }
 
