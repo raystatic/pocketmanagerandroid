@@ -49,7 +49,7 @@ class HomeActivity : BaseActivity() {
 
         viewModel!!.readBalancefromDB(this,dbReference,tv_balance_action_bar, tv_days_left_action_bar)
 
-        viewModel!!.readTransactions(this,dbReference,rv_transactions, home_loader)
+        viewModel!!.readTransactions(this,dbReference,rv_transactions, home_loader, tv_no_transaction)
 
     }
 

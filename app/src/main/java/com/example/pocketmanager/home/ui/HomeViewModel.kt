@@ -363,7 +363,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             .setValue(null)
     }
 
-    fun readTransactions(context: Context, dbReference: DatabaseReference, recyclerView: RecyclerView, progressBar: ProgressBar) {
+    fun readTransactions(context: Context, dbReference: DatabaseReference, recyclerView: RecyclerView, progressBar: ProgressBar, textView: TextView) {
         val user = FirebaseAuth.getInstance().currentUser
 
         val transactions = ArrayList<Transaction>()
@@ -371,7 +371,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         dbReference.child("/${user?.displayName}/transactions/")
             .addValueEventListener(object : ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
-                    Utility.showToast(context,"No transaction found for this month! canceled")
+                    Utility.showToast(context,"Unable to read transactions!")
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
@@ -380,7 +380,9 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                         if (progressBar.visibility == View.VISIBLE){
                             progressBar.visibility = View.GONE
                         }
-                        Utility.showToast(context,"No transaction found for this month!")
+                        if (textView.visibility == View.GONE){
+                            textView.visibility = View.VISIBLE
+                        }
                     }
                     p0.children.forEach {
                         val transaction = it.getValue(Transaction::class.java)
@@ -396,6 +398,10 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                         if (progressBar.visibility == View.VISIBLE){
                             progressBar.visibility = View.GONE
                         }
+                        if (textView.visibility == View.VISIBLE){
+                            textView.visibility = View.GONE
+                        }
+
                     }
                 }
             })
