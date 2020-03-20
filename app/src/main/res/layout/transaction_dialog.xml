@@ -211,6 +211,8 @@
         android:text="OK"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
+        android:textColor="#fff"
+        android:background="@drawable/button_background"
         android:id="@+id/btn_ok_transaction"/>
 
 </LinearLayout>

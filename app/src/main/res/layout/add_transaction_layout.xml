@@ -101,6 +101,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="Add"
+                android:textColor="#fff"
+                android:background="@drawable/button_background"
                 android:id="@+id/btn_add_transaction_confrm"
                 android:layout_gravity="center"/>
 
