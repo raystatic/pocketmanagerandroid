@@ -4,18 +4,57 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketmanager.R
 import com.example.pocketmanager.home.model.Transaction
 import com.example.pocketmanager.utils.Utility
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 
 
 class TransactionsRecyclerViewAdapter(var context:Context,
-                                      var transactions:ArrayList<Transaction>,
-                                      var listener: TransactionInteractor) :
+                                      var listener: TransactionInteractor,
+                                      var transactionsReference: DatabaseReference,
+                                      var progressBar: ProgressBar) :
     RecyclerView.Adapter<TransactionsRecyclerViewAdapter.TransactionsViewHolder>() {
 
+
+    private val childEventListener: ChildEventListener?
+
+    private val transactions = ArrayList<Transaction>()
+
+    init {
+        val childEventListener  = object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Utility.showToast(context,"Unable to read transactions!")
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val transaction = p0.getValue(Transaction::class.java)
+                transactions.add(transaction!!)
+                notifyItemInserted(transactions.size - 1)
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+
+            }
+        }
+
+        transactionsReference.addChildEventListener(childEventListener)
+        this.childEventListener = childEventListener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionsViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.transacations_adapter_layout,parent,false)
@@ -23,12 +62,13 @@ class TransactionsRecyclerViewAdapter(var context:Context,
         return TransactionsViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return transactions.size
-    }
-
     override fun onBindViewHolder(holder: TransactionsViewHolder, position: Int) {
         holder.bindView(transactions[position], context, listener)
+        listener.onTransactionsLoaded(progressBar)
+    }
+
+    override fun getItemCount(): Int {
+        return transactions.size
     }
 
     class TransactionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -55,6 +95,7 @@ class TransactionsRecyclerViewAdapter(var context:Context,
 
     interface TransactionInteractor{
         fun onTransactionClicked(transaction: Transaction, context: Context)
+        fun onTransactionsLoaded(progressBar: ProgressBar)
     }
 
 }

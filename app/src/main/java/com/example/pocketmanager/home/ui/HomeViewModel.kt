@@ -312,6 +312,11 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, Transactio
 
         val transactions = ArrayList<Transaction>()
 
+        val adapter = TransactionsRecyclerViewAdapter(context, this@HomeViewModel, dbReference.child("/${user?.displayName}/transactions/"), progressBar)
+        val layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = adapter
+
         dbReference.child("/${user?.displayName}/transactions/")
             .addValueEventListener(object : ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
@@ -324,19 +329,9 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, Transactio
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
-                    transactions.clear()
                     p0.children.forEach {
                         val transaction = it.getValue(Transaction::class.java)
                         transactions.add(transaction!!)
-                    }
-
-                    val adapter = TransactionsRecyclerViewAdapter(context,transactions, this@HomeViewModel)
-                    val layoutManager = LinearLayoutManager(context)
-                    recyclerView.layoutManager = layoutManager
-                    recyclerView.adapter = adapter
-
-                    if (progressBar.visibility == View.VISIBLE){
-                        progressBar.visibility = View.GONE
                     }
 
                 }
@@ -373,6 +368,12 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, Transactio
 //        dbReference.child("/${user?.displayName}/transactions/")
 //            .addChildEventListener(childEventListener)
 
+    }
+
+    override fun onTransactionsLoaded(progressBar: ProgressBar) {
+        if (progressBar.visibility == View.VISIBLE){
+            progressBar.visibility = View.GONE
+        }
     }
 
     override fun onTransactionClicked(transaction: Transaction, context: Context) {
