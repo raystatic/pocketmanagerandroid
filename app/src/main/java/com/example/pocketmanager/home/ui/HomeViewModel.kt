@@ -306,67 +306,11 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, Transactio
     }
 
     fun readTransactions(context: Context, dbReference: DatabaseReference, recyclerView: RecyclerView, progressBar: ProgressBar) {
-        val prefManager = PrefManager(context)
         val user = FirebaseAuth.getInstance().currentUser
-        val rootKey = prefManager.getString(Constants.ROOT_KEY)
-
-        val transactions = ArrayList<Transaction>()
-
         val adapter = TransactionsRecyclerViewAdapter(context, this@HomeViewModel, dbReference.child("/${user?.displayName}/transactions/"), progressBar)
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
-
-        dbReference.child("/${user?.displayName}/transactions/")
-            .addValueEventListener(object : ValueEventListener{
-                override fun onCancelled(p0: DatabaseError) {
-                    Utility.showToast(context,"Unable to read transactions!")
-
-                    if (progressBar.visibility == View.VISIBLE){
-                        progressBar.visibility = View.GONE
-                    }
-
-                }
-
-                override fun onDataChange(p0: DataSnapshot) {
-                    p0.children.forEach {
-                        val transaction = it.getValue(Transaction::class.java)
-                        transactions.add(transaction!!)
-                    }
-
-                }
-            })
-
-//                val childEventListener  = object : ChildEventListener{
-//            override fun onCancelled(p0: DatabaseError) {
-//                Utility.showToast(context,"Unable to read transactions!")
-//            }
-//
-//            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-//
-//            }
-//
-//            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-//
-//            }
-//
-//            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-//                transactions.clear()
-//                p0.children.forEach {
-//                    val transaction = it.getValue(Transaction::class.java)
-//                    transactions.add(transaction!!)
-//                }
-//
-//                Utility.showToast(context,"Transactions read! ${transactions.size}")
-//            }
-//
-//            override fun onChildRemoved(p0: DataSnapshot) {
-//
-//            }
-//        }
-//
-//        dbReference.child("/${user?.displayName}/transactions/")
-//            .addChildEventListener(childEventListener)
 
     }
 
