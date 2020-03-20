@@ -110,7 +110,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:layout_alignParentEnd="true"
+        android:layout_toLeftOf="@+id/logout_card_action_bar"
         android:id="@+id/update_amount_card_action_bar"
         android:background="@color/colorPrimary"
         android:layout_centerVertical="true"
@@ -126,6 +126,41 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_edit"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update Amount"
+                android:textColor="#fff"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/logout_card_action_bar"
+        android:background="@color/colorPrimary"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/colorPrimary">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_logout"
                 android:layout_gravity="center"/>
 
             <TextView

@@ -1,5 +1,7 @@
 package com.example.pocketmanager.home.ui
 
+import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -9,6 +11,7 @@ import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProviders
 import com.example.pocketmanager.R
 import com.example.pocketmanager.utils.BaseActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.custom_home_action_bar_layout.*
@@ -40,9 +43,30 @@ class HomeActivity : BaseActivity() {
             viewModel!!.showInfoDialog(this,dbReference)
         }
 
+        logout_card_action_bar.setOnClickListener {
+            signout(this)
+        }
+
         viewModel!!.readBalancefromDB(this,dbReference,tv_balance_action_bar)
 
         viewModel!!.readTransactions(this,dbReference,rv_transactions, home_loader)
+
+    }
+
+    fun signout(context: Context){
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Sign out")
+        builder.setMessage("Are you sure want to sign out?")
+        builder.setPositiveButton("Yes") { dialog, which ->
+            FirebaseAuth.getInstance().signOut()
+            finish()
+        }
+        builder.setNegativeButton("No"){ dialog, which ->
+            dialog.cancel()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
 
     }
 }
