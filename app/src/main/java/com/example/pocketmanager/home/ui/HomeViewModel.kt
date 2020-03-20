@@ -133,17 +133,22 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, Transactio
             val desc = etDesc.text.toString().trim()
             val type = EXPENDITURE_TYPE
 
-            var debit = false
+            if (sender.isNotEmpty() && receiver.isNotEmpty()){
+                etSender.error = "One must be empty"
+                etReceiver.error = "One must be empty"
+            }else{
+                var debit = false
 
-            if (receiver.isNotEmpty()) {
-                debit = true
-            }else if (sender.isNotEmpty()){
-                debit = false
+                if (receiver.isNotEmpty()) {
+                    debit = true
+                }else if (sender.isNotEmpty()){
+                    debit = false
+                }
+
+                val transaction = Transaction(amount,desc,receiver,sender,date,type,mode,debit)
+
+                addTransactionToDB(context,transaction,dbReference,dialog)
             }
-
-            val transaction = Transaction(amount,desc,receiver,sender,date,type,mode,debit)
-
-            addTransactionToDB(context,transaction,dbReference,dialog)
 
         }
 
