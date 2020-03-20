@@ -5,9 +5,9 @@ import com.google.firebase.database.IgnoreExtraProperties
 import java.util.*
 
 @IgnoreExtraProperties
-data class Amount(var amount: String, var date: String, var balance: String, var spent:String){
+data class Amount(var amount: String, var date: String, var balance: String, var spent:String, var uptoDate:Date){
 
-    constructor():this("","","","")
+    constructor():this("","","","",Date())
 
     @Exclude
     fun toMap() : Map<String, Any?>{
@@ -15,7 +15,8 @@ data class Amount(var amount: String, var date: String, var balance: String, var
             "amount" to amount,
             "date" to date,
             "balance" to balance,
-            "spent" to spent
+            "spent" to spent,
+            "uptoDate" to uptoDate
         )
     }
 

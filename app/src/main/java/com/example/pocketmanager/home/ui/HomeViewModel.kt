@@ -35,11 +35,11 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
     var EXPENDITURE_TYPE = ""
 
     val typeList = arrayOf("Self","Home")
-    val monthList = arrayOf(1,2,3,4,5)
+    val monthList = arrayOf(1,2,3)
     var monthDuration = 1
 
-    fun readBalancefromDB(context: Context,dbReference: DatabaseReference, textView: TextView){
-        readAmountFromDB(context,dbReference,null, textView)
+    fun readBalancefromDB(context: Context,dbReference: DatabaseReference, textView: TextView, tvDaysLeft:TextView){
+        readAmountFromDB(context,dbReference,null, textView,tvDaysLeft)
     }
 
 
@@ -47,7 +47,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         val dialog = Dialog(context)
         dialog.setContentView(R.layout.info_dialog_layout)
 
-        readAmountFromDB(context,dbReference, dialog, null)
+        readAmountFromDB(context,dbReference, dialog, null,null)
 
         val button  = dialog.findViewById<Button>(R.id.btn_ok_summary)
 
@@ -63,7 +63,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
     }
 
-    private fun readAmountFromDB(context: Context, dbReference: DatabaseReference, dialog: Dialog?, textView: TextView?) {
+    private fun readAmountFromDB(context: Context, dbReference: DatabaseReference, dialog: Dialog?, textView: TextView?,tvDaysLeft:TextView?) {
 
         val prefManager = PrefManager(context)
         val rootKey = prefManager.getString(Constants.ROOT_KEY)
@@ -88,8 +88,10 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                     tvDateUpdated.text = Utility.formatDate(amount?.date)
                     tvSpentAmount.text = amount?.spent
 
-                }else if (dialog == null && textView!=null) {
+                }else if (dialog == null && textView!=null && tvDaysLeft!=null) {
                     textView.text = amount?.balance
+                    val uptoDate = Utility.noOfDaysBWTwoDates(Date(),amount?.uptoDate!!)
+                    tvDaysLeft.text = uptoDate
                 }
             }
         }
@@ -272,6 +274,8 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
         tvDuration.visibility = View.GONE
 
+        val calendar =  Calendar.getInstance()
+
         val aa = ArrayAdapter(context, android.R.layout.simple_spinner_item, monthList)
 
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -290,7 +294,6 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                 id: Long
             ) {
                 monthDuration = monthList[position]
-                val calendar =  Calendar.getInstance()
                 calendar.add(Calendar.MONTH,monthDuration)
                 tvDuration.visibility = View.VISIBLE
                 tvDuration.text = "${Utility.formatDate(Date().toString())} to ${Utility.formatDate(calendar.time.toString())}"
@@ -308,7 +311,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             if (!TextUtils.isEmpty(totalAmount)){
                 val today = Date().toString()
                 val spent = 0
-                val amount = Amount(totalAmount, today, totalAmount,spent.toString())
+                val amount = Amount(totalAmount, today, totalAmount,spent.toString(),calendar.time)
                 addAmountToDb(amount, dbReference, context, dialog, etTotalAmount)
             }
         }

@@ -2,9 +2,12 @@ package com.example.pocketmanager.utils
 
 import android.content.Context
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class Utility {
     companion object {
@@ -19,6 +22,26 @@ class Utility {
 
         fun showSnackBar(view: View,msg: String){
             Snackbar.make(view,msg,Snackbar.LENGTH_SHORT)
+        }
+
+        fun noOfDaysBWTwoDates(date1:Date, date2:Date): String{
+            val diff = date2.time - date1.time
+            return TimeUnit.DAYS.convert(diff,TimeUnit.MILLISECONDS).toString()
+        }
+
+        fun stringToDate(strdate: String?):Date{
+            val format =
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+//            try {
+//                val date = format.parse(strdate!!)
+//                return date
+//            } catch (e: ParseException) {
+//                e.printStackTrace()
+//            }
+
+            val date = format.parse(strdate!!)
+            return date
+
         }
 
     }

@@ -47,7 +47,7 @@ class HomeActivity : BaseActivity() {
             signout(this)
         }
 
-        viewModel!!.readBalancefromDB(this,dbReference,tv_balance_action_bar)
+        viewModel!!.readBalancefromDB(this,dbReference,tv_balance_action_bar, tv_days_left_action_bar)
 
         viewModel!!.readTransactions(this,dbReference,rv_transactions, home_loader)
 
