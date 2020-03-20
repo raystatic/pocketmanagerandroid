@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Summary"
-        android:textColor="#000"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         android:id="@+id/tv_title_add_amount"
         android:textSize="26sp"/>
@@ -27,14 +27,14 @@
             android:layout_height="wrap_content"
             android:text="Total Amount : "
             android:textColor="#000"
-            android:textSize="20sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loading.."
             android:textColor="#000"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:id="@+id/tv_total_amount"/>
 
     </LinearLayout>
@@ -50,14 +50,14 @@
             android:layout_height="wrap_content"
             android:text="Available Balance : "
             android:textColor="#000"
-            android:textSize="20sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loading.."
             android:textColor="#000"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:id="@+id/tv_balance_amount"/>
 
     </LinearLayout>
@@ -73,14 +73,14 @@
             android:layout_height="wrap_content"
             android:text="Spent Amount : "
             android:textColor="#000"
-            android:textSize="20sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loading.."
             android:textColor="#000"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:id="@+id/tv_spent_amount"/>
 
     </LinearLayout>
@@ -96,14 +96,14 @@
             android:layout_height="wrap_content"
             android:text="Date of Updation : "
             android:textColor="#000"
-            android:textSize="20sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loading.."
             android:textColor="#000"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:id="@+id/tv_date_updation"/>
 
     </LinearLayout>

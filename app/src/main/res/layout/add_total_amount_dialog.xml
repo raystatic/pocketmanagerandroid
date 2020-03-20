@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Total Amount"
-        android:textColor="#000"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         android:id="@+id/tv_title_add_amount"
         android:textSize="26sp"/>
@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
+        android:layout_marginTop="10dp"
         android:id="@+id/et_total_amount_home"/>
 
     <Button
@@ -28,8 +29,5 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:id="@+id/btn_add_confrm"/>
-
-
-
 
 </LinearLayout>
