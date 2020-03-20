@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
+import android.widget.AdapterView.OnItemSelectedListener
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,11 +30,13 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
-class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, TransactionsRecyclerViewAdapter.TransactionInteractor{
+class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInteractor{
 
     var EXPENDITURE_TYPE = ""
 
     val typeList = arrayOf("Self","Home")
+    val monthList = arrayOf(1,2,3,4,5)
+    var monthDuration = 1
 
     fun readBalancefromDB(context: Context,dbReference: DatabaseReference, textView: TextView){
         readAmountFromDB(context,dbReference,null, textView)
@@ -107,7 +110,20 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, Transactio
         val etDesc = dialog.findViewById<EditText>(R.id.et_add_transaction_desc)
         val spinner = dialog.findViewById<Spinner>(R.id.spinner_add_transaction)
 
-        spinner.onItemSelectedListener = this
+        spinner.onItemSelectedListener = object : OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                EXPENDITURE_TYPE = typeList[position]
+            }
+        }
 
         val aa = ArrayAdapter(context, android.R.layout.simple_spinner_item, typeList)
 
@@ -211,14 +227,6 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, Transactio
         })
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-
-    }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        EXPENDITURE_TYPE = typeList[position]
-    }
-
     private fun addTransactionToDb(
         context: Context,
         transaction: Transaction,
@@ -259,6 +267,39 @@ class HomeViewModel: ViewModel(), AdapterView.OnItemSelectedListener, Transactio
         dialog.setTitle("Add Total Amount")
 
         val etTotalAmount = dialog.findViewById<EditText>(R.id.et_total_amount_home)
+        val spinner = dialog.findViewById<Spinner>(R.id.spinner_months)
+        val tvDuration = dialog.findViewById<TextView>(R.id.tv_duration_preview)
+
+        tvDuration.visibility = View.GONE
+
+        val aa = ArrayAdapter(context, android.R.layout.simple_spinner_item, monthList)
+
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        spinner.adapter = aa
+
+        spinner.onItemSelectedListener = object : OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                monthDuration = monthList[position]
+                val calendar =  Calendar.getInstance()
+                calendar.add(Calendar.MONTH,monthDuration)
+                tvDuration.visibility = View.VISIBLE
+                tvDuration.text = "${Utility.formatDate(Date().toString())} to ${Utility.formatDate(calendar.time.toString())}"
+            }
+
+        }
+
+        val window = dialog.window
+        window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT)
 
         val dialogButton: Button = dialog.findViewById<Button>(R.id.btn_add_confrm)
 

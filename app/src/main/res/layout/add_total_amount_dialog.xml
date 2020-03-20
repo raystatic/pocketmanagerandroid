@@ -20,7 +20,39 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:layout_marginTop="10dp"
+        android:hint="Amount"
+        android:textSize="16sp"
         android:id="@+id/et_total_amount_home"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Duration"
+            />
+
+        <Spinner
+            android:id="@+id/spinner_months"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duration: "
+        android:id="@+id/tv_duration_preview"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"/>
 
     <Button
         android:layout_width="wrap_content"
