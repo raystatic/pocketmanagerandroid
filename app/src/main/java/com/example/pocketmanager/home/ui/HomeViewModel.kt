@@ -381,13 +381,15 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                             progressBar.visibility = View.GONE
                         }
                         if (textView.visibility == View.GONE){
+                            Utility.showToast(context,"here ${textView.visibility == View.GONE}")
                             textView.visibility = View.VISIBLE
                         }
-                    }
-                    p0.children.forEach {
-                        val transaction = it.getValue(Transaction::class.java)
-                        if (Date().after(transaction?.transactDate)){
-                            transactions.add(transaction!!)
+                    }else{
+                        p0.children.forEach {
+                            val transaction = it.getValue(Transaction::class.java)
+                            if (Date().after(transaction?.transactDate)){
+                                transactions.add(transaction!!)
+                            }
                         }
 
                         val adapter = TransactionsRecyclerViewAdapter(context, transactions, this@HomeViewModel)
@@ -401,7 +403,6 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                         if (textView.visibility == View.VISIBLE){
                             textView.visibility = View.GONE
                         }
-
                     }
                 }
             })
