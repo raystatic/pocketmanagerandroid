@@ -71,6 +71,11 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             }
 
             override fun onDataChange(p0: DataSnapshot) {
+
+                if (!p0.exists()){
+                    Utility.showDialog(context,"Please add amount of this month to get started")
+                }
+
                 val amount = p0.getValue(Amount::class.java)
 
                 if (dialog!=null && textView == null){
@@ -88,7 +93,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
                 }else if (dialog == null && textView!=null && tvDaysLeft!=null) {
                     textView.text = amount?.balance
-                    val uptoDate = Utility.noOfDaysBWTwoDates(Date(),amount?.uptoDate!!)
+                    val uptoDate = amount?.uptoDate?.let { Utility.noOfDaysBWTwoDates(Date(), it) }
                     tvDaysLeft.text = uptoDate
                 }
             }

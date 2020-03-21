@@ -1,6 +1,8 @@
 package com.example.pocketmanager.utils
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.view.View
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
@@ -42,6 +44,18 @@ class Utility {
             val date = format.parse(strdate!!)
             return date
 
+        }
+
+        fun showDialog(context: Context, s: String) {
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage(s)
+            builder.setPositiveButton("OK"
+            ) { dialog, which ->
+                dialog.cancel()
+            }
+
+            val dialog = builder.create()
+            dialog.show()
         }
 
     }
