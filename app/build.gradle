@@ -41,6 +41,12 @@ dependencies {
     //connectivity library
     implementation 'com.novoda:merlin:1.2.0'
 
+//    //showcaseview
+//    implementation 'com.github.amlcurran.showcaseview:library:5.4.3'
+
+    //
+    implementation 'com.github.deano2390:MaterialShowcaseView:1.3.4@aar'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Total Amount"
+        android:text="Add Budget of the Month"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         android:id="@+id/tv_title_add_amount"

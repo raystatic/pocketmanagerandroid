@@ -4,17 +4,18 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProviders
 import com.example.pocketmanager.R
 import com.example.pocketmanager.utils.BaseActivity
+import com.example.pocketmanager.utils.Constants
+import com.example.pocketmanager.utils.GenerateRandomString
+import com.example.pocketmanager.utils.PrefManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.custom_home_action_bar_layout.*
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 
 
 class HomeActivity : BaseActivity() {
@@ -69,4 +70,56 @@ class HomeActivity : BaseActivity() {
         dialog.show()
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        val prefManager = PrefManager(this)
+        if(!prefManager.getBoolean(Constants.NOTFIRSTRUN)!!){
+           runTutorial()
+            prefManager.saveBoolean(Constants.NOTFIRSTRUN,true)
+        }
+    }
+
+    private fun runTutorial() {
+        val config = ShowcaseConfig()
+        config.delay = 500 // half second between each showcase view
+
+        val showcaseID = GenerateRandomString.randomString(30)
+        val sequence = MaterialShowcaseSequence(this, showcaseID)
+
+        sequence.setConfig(config)
+
+        sequence.addSequenceItem(
+            tv_balance_title,
+            "This will show your balance", "GOT IT"
+        )
+
+        sequence.addSequenceItem(
+            tv_days_left_title,
+            "No of days left will be shown here", "GOT IT"
+        )
+
+        sequence.addSequenceItem(
+            add_transaction_card_action_bar,
+            "Click this to add a new transaction", "GOT IT"
+        )
+
+        sequence.addSequenceItem(
+            info_card_action_bar,
+            "Click this to a view summary of month", "GOT IT"
+        )
+
+        sequence.addSequenceItem(
+            update_amount_card_action_bar,
+            "Click this to add or update budget of the month", "GOT IT"
+        )
+
+        sequence.addSequenceItem(
+            logout_card_action_bar,
+            "Click this to sign out of the app", "GOT IT"
+        )
+
+        sequence.start()
+    }
+
 }
