@@ -71,30 +71,30 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-
                 if (!p0.exists()){
                     Utility.showDialog(context,"Please add amount of this month to get started")
-                }
+                    prefManager.saveBoolean(Constants.BUDGET_UPDATED,false)
+                }else{
+                    val amount = p0.getValue(Amount::class.java)
 
-                val amount = p0.getValue(Amount::class.java)
+                    if (dialog!=null && textView == null){
+                        val tvTotalAmount = dialog.findViewById<TextView>(R.id.tv_total_amount)
+                        val tvBalanceAmount = dialog.findViewById<TextView>(R.id.tv_balance_amount)
+                        val tvSpentAmount = dialog.findViewById<TextView>(R.id.tv_spent_amount)
+                        val tvDateUpdated = dialog.findViewById<TextView>(R.id.tv_date_updation)
+                        val tvEndDate = dialog.findViewById<TextView>(R.id.tv_date_end)
 
-                if (dialog!=null && textView == null){
-                    val tvTotalAmount = dialog.findViewById<TextView>(R.id.tv_total_amount)
-                    val tvBalanceAmount = dialog.findViewById<TextView>(R.id.tv_balance_amount)
-                    val tvSpentAmount = dialog.findViewById<TextView>(R.id.tv_spent_amount)
-                    val tvDateUpdated = dialog.findViewById<TextView>(R.id.tv_date_updation)
-                    val tvEndDate = dialog.findViewById<TextView>(R.id.tv_date_end)
+                        tvTotalAmount.text = amount?.amount
+                        tvBalanceAmount.text = amount?.balance
+                        tvDateUpdated.text = Utility.formatDate(amount?.date)
+                        tvSpentAmount.text = amount?.spent
+                        tvEndDate.text = Utility.formatDate(amount?.uptoDate.toString())
 
-                    tvTotalAmount.text = amount?.amount
-                    tvBalanceAmount.text = amount?.balance
-                    tvDateUpdated.text = Utility.formatDate(amount?.date)
-                    tvSpentAmount.text = amount?.spent
-                    tvEndDate.text = Utility.formatDate(amount?.uptoDate.toString())
-
-                }else if (dialog == null && textView!=null && tvDaysLeft!=null) {
-                    textView.text = amount?.balance
-                    val uptoDate = amount?.uptoDate?.let { Utility.noOfDaysBWTwoDates(Date(), it) }
-                    tvDaysLeft.text = uptoDate
+                    }else if (dialog == null && textView!=null && tvDaysLeft!=null) {
+                        textView.text = amount?.balance
+                        val uptoDate = amount?.uptoDate?.let { Utility.noOfDaysBWTwoDates(Date(), it) }
+                        tvDaysLeft.text = uptoDate
+                    }
                 }
             }
         }
@@ -146,47 +146,52 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT)
 
         btnAdd.setOnClickListener {
-            val amount = etAmount.text.toString().trim()
-            val receiver = etReceiver.text.toString().trim()
-            val sender = etSender.text.toString().trim()
-            val date = Date().toString()
-            val mode = etMode.text.toString().trim()
-            val desc = etDesc.text.toString().trim()
-            val type = EXPENDITURE_TYPE
 
-            if (sender.isEmpty() && receiver.isEmpty()){
-                etSender.error = "One must be filled"
-                etReceiver.error = "One must be filled"
-            }else if (sender.isNotEmpty() && receiver.isNotEmpty()){
-                etSender.error = "One must be empty"
-                etReceiver.error = "One must be empty"
+            val prefManager = PrefManager(context)
+            if (!prefManager.getBoolean(Constants.BUDGET_UPDATED)!!){
+                Utility.showToast(context,"Budget no updated yet!")
             }else{
+                val amount = etAmount.text.toString().trim()
+                val receiver = etReceiver.text.toString().trim()
+                val sender = etSender.text.toString().trim()
+                val date = Date().toString()
+                val mode = etMode.text.toString().trim()
+                val desc = etDesc.text.toString().trim()
+                val type = EXPENDITURE_TYPE
 
-                if (sender.isEmpty()){
-                    etSender.error = null
-                }
+                if (sender.isEmpty() && receiver.isEmpty()){
+                    etSender.error = "One must be filled"
+                    etReceiver.error = "One must be filled"
+                }else if (sender.isNotEmpty() && receiver.isNotEmpty()){
+                    etSender.error = "One must be empty"
+                    etReceiver.error = "One must be empty"
+                }else{
 
-                if (receiver.isEmpty()){
-                    etReceiver.error = null
-                }
-
-                if (amount.isNotEmpty() && mode.isNotEmpty() && date.isNotEmpty() && desc.isNotEmpty()){
-                    var debit = false
-
-                    if (receiver.isNotEmpty()) {
-                        debit = true
-                    }else if (sender.isNotEmpty()){
-                        debit = false
+                    if (sender.isEmpty()){
+                        etSender.error = null
                     }
 
-                    val transaction = Transaction(amount,desc,receiver,sender,date,type,mode,debit, Date())
+                    if (receiver.isEmpty()){
+                        etReceiver.error = null
+                    }
 
-                    addTransactionToDB(context,transaction,dbReference,dialog)
-                }else{
-                    Utility.showToast(context,"Fill data properly!")
+                    if (amount.isNotEmpty() && mode.isNotEmpty() && date.isNotEmpty() && desc.isNotEmpty()){
+                        var debit = false
+
+                        if (receiver.isNotEmpty()) {
+                            debit = true
+                        }else if (sender.isNotEmpty()){
+                            debit = false
+                        }
+
+                        val transaction = Transaction(amount,desc,receiver,sender,date,type,mode,debit, Date())
+
+                        addTransactionToDB(context,transaction,dbReference,dialog)
+                    }else{
+                        Utility.showToast(context,"Fill data properly!")
+                    }
                 }
             }
-
         }
 
 
@@ -370,6 +375,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                 dialog.cancel()
                 if (it.isSuccessful){
                     Utility.showToast(context,"Amount added")
+                    prefManager.saveBoolean(Constants.BUDGET_UPDATED,true)
                     deleteEarlierTransactions(context,dbReference)
                 }else{
                     Utility.showToast(context,"There was an error in updating amount")
