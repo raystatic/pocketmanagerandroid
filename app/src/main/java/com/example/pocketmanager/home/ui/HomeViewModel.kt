@@ -79,10 +79,10 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                     Log.d("context_error","Please add amount of this month to get started $context")
 
                     try{
-                        Utility.showDialog(context,"Please add amount of this month to get started")
+                        Utility.showDialog(context,"Please add budget of this month to get started")
                     }catch (e:Exception){
                         Log.d("dialog_error",e.message!!)
-                        Utility.showToast(context,"Please add amount of this month to get started")
+                        Utility.showToast(context,"Please add budget of this month to get started")
                     }
                 }else{
                     val amount = p0.getValue(Amount::class.java)
@@ -389,9 +389,9 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             .addOnCompleteListener {
                 dialog.cancel()
                 if (it.isSuccessful){
+                    deleteEarlierTransactions(context,dbReference)
                     Utility.showToast(context,"Amount added")
                     prefManager.saveBoolean(Constants.BUDGET_UPDATED,true)
-                    deleteEarlierTransactions(context,dbReference)
                 }else{
                     Utility.showToast(context,"There was an error in updating amount")
                 }
@@ -425,6 +425,9 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                         if (textView.visibility == View.GONE){
                             textView.visibility = View.VISIBLE
                         }
+                        if (recyclerView.visibility == View.VISIBLE){
+                            recyclerView.visibility = View.GONE
+                        }
                     }else{
                         p0.children.forEach {
                             val transaction = it.getValue(Transaction::class.java)
@@ -433,6 +436,9 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                             }
                         }
 
+                        if (recyclerView.visibility == View.GONE){
+                            recyclerView.visibility = View.VISIBLE
+                        }
                         val adapter = TransactionsRecyclerViewAdapter(context, transactions, this@HomeViewModel)
                         val layoutManager = LinearLayoutManager(context)
                         recyclerView.layoutManager = layoutManager
