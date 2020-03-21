@@ -66,7 +66,6 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
     private fun readAmountFromDB(context: Context, dbReference: DatabaseReference, dialog: Dialog?, textView: TextView?,tvDaysLeft:TextView?) {
 
         val prefManager = PrefManager(context)
-        val rootKey = prefManager.getString(Constants.ROOT_KEY)
         val user = FirebaseAuth.getInstance().currentUser
 
         val amountListener =   object : ValueEventListener {
@@ -124,8 +123,6 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
     }
 
     private fun deleteExistingData(user: FirebaseUser?, dbReference: DatabaseReference, context: Context) {
-        val prefManager = PrefManager(context)
-        val key = prefManager.getString(Constants.ROOT_KEY)
         dbReference.child("/${user?.displayName}/budget").setValue(null)
     }
 
@@ -234,8 +231,6 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         dbReference: DatabaseReference,
         dialog: Dialog
     ) {
-        val prefManager = PrefManager(context)
-        val rootKey = prefManager.getString(Constants.ROOT_KEY)
         val user = FirebaseAuth.getInstance().currentUser
         dbReference.child("/${user?.displayName}/budget").runTransaction(object : com.google.firebase.database.Transaction.Handler{
 
@@ -379,24 +374,12 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
         val prefManager = PrefManager(context)
 
-        var key = ""
-
         val amountMap = amount.toMap()
 
         val childUpdates = HashMap<String,Any>()
 
         val user = FirebaseAuth.getInstance().currentUser
 
-      //  deleteExistingData(user,dbReference,context)
-
-        if (!TextUtils.isEmpty(prefManager.getString(Constants.ROOT_KEY))){
-            Utility.showToast(context,"Root key not empty")
-            Log.d("key_error","Root key not empty")
-            key = prefManager.getString(Constants.ROOT_KEY).toString()
-        }else{
-            key = dbReference.child(Constants.USER).push().key.toString()
-            prefManager.saveString(Constants.ROOT_KEY,key)
-        }
 
         childUpdates["/${user?.displayName}/budget"] = amountMap
 
