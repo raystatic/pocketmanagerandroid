@@ -77,7 +77,7 @@ class RegisterActivity : BaseActivity(),
                         }
                 }else{
                     hideLoader()
-                    Toast.makeText(this,"Registration failed!",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this,"Registration failed! ${it.exception?.message}",Toast.LENGTH_SHORT).show()
                     updateUi(null)
                 }
             }

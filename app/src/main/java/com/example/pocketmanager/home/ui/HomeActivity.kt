@@ -22,18 +22,25 @@ class HomeActivity : BaseActivity() {
 
     private var viewModel : HomeViewModel?=null
 
+    val dbReference = FirebaseDatabase.getInstance().reference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        viewModel = ViewModelProviders.of(this)[HomeViewModel::class.java]
+//        val prefManager = PrefManager(this)
+//        if(!prefManager.getBoolean(Constants.NOTFIRSTRUN)!!){
+//            runTutorial()
+//            prefManager.saveBoolean(Constants.NOTFIRSTRUN,true)
+//        }
 
-        val dbReference = FirebaseDatabase.getInstance().reference
+        viewModel = ViewModelProviders.of(this)[HomeViewModel::class.java]
 
         home_loader.visibility = View.VISIBLE
 
+
         update_amount_card_action_bar.setOnClickListener {
-            viewModel!!.showAddAmountDialog(this,dbReference)
+            viewModel!!.showAddAmountDialog(this,dbReference, tv_balance_action_bar,tv_days_left_action_bar)
         }
 
         add_transaction_card_action_bar.setOnClickListener {
@@ -73,11 +80,7 @@ class HomeActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        val prefManager = PrefManager(this)
-        if(!prefManager.getBoolean(Constants.NOTFIRSTRUN)!!){
-           runTutorial()
-            prefManager.saveBoolean(Constants.NOTFIRSTRUN,true)
-        }
+
     }
 
     private fun runTutorial() {

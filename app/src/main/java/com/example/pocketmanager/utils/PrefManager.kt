@@ -25,6 +25,6 @@ class PrefManager(context: Context) {
     }
 
     fun getString(key: String): String? {
-        return pref.getString(key, null)
+        return pref.getString(key, "")
     }
 }

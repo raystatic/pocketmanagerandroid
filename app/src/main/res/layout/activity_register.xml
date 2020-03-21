@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <include layout="@layout/login_action_bar"/>
+                <include layout="@layout/signup_action_bar"/>
 
 
             </RelativeLayout>
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/et_email_reg"
-                android:hint="Enter Username"
+                android:hint="Enter Email address to register"
                 android:inputType="textEmailAddress"/>
 
         </com.google.android.material.textfield.TextInputLayout>

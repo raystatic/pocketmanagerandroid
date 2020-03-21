@@ -20,6 +20,7 @@ import com.example.pocketmanager.utils.Constants
 import com.example.pocketmanager.utils.PrefManager
 import com.example.pocketmanager.utils.Utility
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.info_dialog_layout.view.*
 import java.lang.Exception
@@ -74,6 +75,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             }
 
             override fun onDataChange(p0: DataSnapshot) {
+                Utility.showToast(context,"Here")
                 if (!p0.exists()){
                     prefManager.saveBoolean(Constants.BUDGET_UPDATED,false)
                     Log.d("context_error","Please add amount of this month to get started $context")
@@ -103,7 +105,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                     }else if (dialog == null && textView!=null && tvDaysLeft!=null) {
                         val noOfdays = amount?.uptoDate?.let { Utility.noOfDaysBWTwoDates(Date(), it) }
                         if (noOfdays?.toInt()!! <0){
-                            dbReference.child("/${user?.displayName}").setValue(null)
+                            deleteExistingData(user,dbReference, context)
                         }else{
                             textView.text = amount?.balance
                             val uptoDate = amount?.uptoDate?.let { Utility.noOfDaysBWTwoDates(Date(), it) }
@@ -116,6 +118,12 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
         dbReference.child("/${user?.displayName}/$rootKey").addValueEventListener(amountListener)
 
+    }
+
+    private fun deleteExistingData(user: FirebaseUser?, dbReference: DatabaseReference, context: Context) {
+        val prefManager = PrefManager(context)
+        val key = prefManager.getString(Constants.ROOT_KEY)
+        dbReference.child("/${user?.displayName}/$key").setValue(null)
     }
 
     fun showTransactionDialog(context: Context, dbReference: DatabaseReference){
@@ -300,7 +308,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
     }
 
-    fun showAddAmountDialog(context:Context, dbReference: DatabaseReference){
+    fun showAddAmountDialog(context:Context, dbReference: DatabaseReference, tvBalanec: TextView, tvDaysLeft: TextView){
 
         val dialog = Dialog(context)
 
@@ -351,7 +359,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                 val today = Date().toString()
                 val spent = 0
                 val amount = Amount(totalAmount, today, totalAmount,spent.toString(),calendar.time, Date())
-                addAmountToDb(amount, dbReference, context, dialog, etTotalAmount)
+                addAmountToDb(amount, dbReference, context, dialog, etTotalAmount,tvBalanec,tvDaysLeft)
             }else{
                 etTotalAmount.error = "Cannot be empty"
             }
@@ -361,7 +369,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         dialog.setCanceledOnTouchOutside(true)
     }
 
-    private fun addAmountToDb(amount: Amount, dbReference: DatabaseReference, context:Context, dialog: Dialog, editText: EditText) {
+    private fun addAmountToDb(amount: Amount, dbReference: DatabaseReference, context:Context, dialog: Dialog, editText: EditText,tvBalanec:TextView,tvDaysLeft:TextView) {
 
         val title = dialog.findViewById<TextView>(R.id.tv_title_add_amount)
         title.text = "Updating... "
@@ -376,7 +384,11 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
         val user = FirebaseAuth.getInstance().currentUser
 
+      //  deleteExistingData(user,dbReference,context)
+
         if (!TextUtils.isEmpty(prefManager.getString(Constants.ROOT_KEY))){
+            Utility.showToast(context,"Root key not empty")
+            Log.d("key_error","Root key not empty")
             key = prefManager.getString(Constants.ROOT_KEY).toString()
         }else{
             key = dbReference.child(Constants.USER).push().key.toString()
@@ -389,9 +401,10 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             .addOnCompleteListener {
                 dialog.cancel()
                 if (it.isSuccessful){
-                    deleteEarlierTransactions(context,dbReference)
+                    deleteEarlierTransactions(user,dbReference)
                     Utility.showToast(context,"Amount added")
                     prefManager.saveBoolean(Constants.BUDGET_UPDATED,true)
+                    readBalancefromDB(context,dbReference,tvBalanec,tvDaysLeft)
                 }else{
                     Utility.showToast(context,"There was an error in updating amount")
                 }
@@ -399,8 +412,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
     }
 
-    private fun deleteEarlierTransactions(context: Context, dbReference: DatabaseReference) {
-        val user  =FirebaseAuth.getInstance().currentUser
+    private fun deleteEarlierTransactions(user: FirebaseUser?, dbReference: DatabaseReference) {
         dbReference.child("${user?.displayName}/transactions")
             .setValue(null)
     }
