@@ -37,25 +37,6 @@
                     android:visibility="gone"
                     android:layout_gravity="center_horizontal"/>
 
-                <View
-                    android:layout_width="13dp"
-                    android:layout_height="3dp"
-                    android:background="@color/red"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/view_debit"
-                    android:visibility="gone"
-                    android:layout_marginEnd="2dp"
-                    android:layout_toStartOf="@+id/tv_amount_transaction"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/view_credit"
-                    android:visibility="gone"
-                    android:src="@drawable/ic_action_credit_amount"
-                    android:layout_centerVertical="true"
-                    android:layout_toStartOf="@+id/tv_amount_transaction"/>
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
