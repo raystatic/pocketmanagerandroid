@@ -1,10 +1,7 @@
 package com.example.pocketmanager.home.ui
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
-import android.icu.util.LocaleData
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -23,8 +20,7 @@ import com.example.pocketmanager.utils.PrefManager
 import com.example.pocketmanager.utils.Utility
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import kotlinx.android.synthetic.main.info_dialog_layout.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -34,8 +30,8 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
     var EXPENDITURE_TYPE = ""
 
-    val typeList = arrayOf("Self","Home")
-    val monthList = arrayOf(1,2,3)
+    val typeList = arrayOf("Self","Other")
+    val monthList = arrayOf(1)
     var monthDuration = 1
 
     fun readBalancefromDB(context: Context,dbReference: DatabaseReference, textView: TextView, tvDaysLeft:TextView){
@@ -82,11 +78,13 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                     val tvBalanceAmount = dialog.findViewById<TextView>(R.id.tv_balance_amount)
                     val tvSpentAmount = dialog.findViewById<TextView>(R.id.tv_spent_amount)
                     val tvDateUpdated = dialog.findViewById<TextView>(R.id.tv_date_updation)
+                    val tvEndDate = dialog.findViewById<TextView>(R.id.tv_date_end)
 
                     tvTotalAmount.text = amount?.amount
                     tvBalanceAmount.text = amount?.balance
                     tvDateUpdated.text = Utility.formatDate(amount?.date)
                     tvSpentAmount.text = amount?.spent
+                    tvEndDate.text = Utility.formatDate(amount?.uptoDate.toString())
 
                 }else if (dialog == null && textView!=null && tvDaysLeft!=null) {
                     textView.text = amount?.balance
@@ -151,21 +149,37 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             val desc = etDesc.text.toString().trim()
             val type = EXPENDITURE_TYPE
 
-            if (sender.isNotEmpty() && receiver.isNotEmpty()){
+            if (sender.isEmpty() && receiver.isEmpty()){
+                etSender.error = "One must be filled"
+                etReceiver.error = "One must be filled"
+            }else if (sender.isNotEmpty() && receiver.isNotEmpty()){
                 etSender.error = "One must be empty"
                 etReceiver.error = "One must be empty"
             }else{
-                var debit = false
 
-                if (receiver.isNotEmpty()) {
-                    debit = true
-                }else if (sender.isNotEmpty()){
-                    debit = false
+                if (sender.isEmpty()){
+                    etSender.error = null
                 }
 
-                val transaction = Transaction(amount,desc,receiver,sender,date,type,mode,debit, Date())
+                if (receiver.isEmpty()){
+                    etReceiver.error = null
+                }
 
-                addTransactionToDB(context,transaction,dbReference,dialog)
+                if (amount.isNotEmpty() && mode.isNotEmpty() && date.isNotEmpty() && desc.isNotEmpty()){
+                    var debit = false
+
+                    if (receiver.isNotEmpty()) {
+                        debit = true
+                    }else if (sender.isNotEmpty()){
+                        debit = false
+                    }
+
+                    val transaction = Transaction(amount,desc,receiver,sender,date,type,mode,debit, Date())
+
+                    addTransactionToDB(context,transaction,dbReference,dialog)
+                }else{
+                    Utility.showToast(context,"Fill data properly!")
+                }
             }
 
         }
@@ -313,6 +327,8 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                 val spent = 0
                 val amount = Amount(totalAmount, today, totalAmount,spent.toString(),calendar.time, Date())
                 addAmountToDb(amount, dbReference, context, dialog, etTotalAmount)
+            }else{
+                etTotalAmount.error = "Cannot be empty"
             }
         }
 
@@ -381,7 +397,6 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                             progressBar.visibility = View.GONE
                         }
                         if (textView.visibility == View.GONE){
-                            Utility.showToast(context,"here ${textView.visibility == View.GONE}")
                             textView.visibility = View.VISIBLE
                         }
                     }else{

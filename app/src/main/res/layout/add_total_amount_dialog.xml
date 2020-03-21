@@ -60,6 +60,22 @@
         android:layout_marginTop="10dp"
         android:textStyle="bold"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="It is recommended to take screenshots of transactions beforehand"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="All your previous transactions will be deleted after updating it"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"/>
+
 
     <Button
         android:layout_width="wrap_content"
