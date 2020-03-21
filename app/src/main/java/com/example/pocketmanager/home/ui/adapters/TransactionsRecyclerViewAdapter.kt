@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -75,6 +76,8 @@ class TransactionsRecyclerViewAdapter(var context:Context,
     class TransactionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvAmount = itemView.findViewById<TextView>(R.id.tv_amount_transaction)
         private val tvDate = itemView.findViewById<TextView>(R.id.tv_date_transaction)
+        private val debitView = itemView.findViewById<View>(R.id.view_debit)
+        private val creditView = itemView.findViewById<ImageView>(R.id.view_credit)
 
         fun bindView(transaction: Transaction, context: Context, listener: TransactionInteractor){
             tvAmount.text =transaction.amount
@@ -82,8 +85,13 @@ class TransactionsRecyclerViewAdapter(var context:Context,
 
             if (transaction.debit!!){
                 tvAmount.setTextColor(context.resources.getColor(R.color.red))
+                debitView.visibility = View.VISIBLE
+                creditView.visibility = View.GONE
+
             }else{
                 tvAmount.setTextColor(context.resources.getColor(R.color.green))
+                debitView.visibility = View.GONE
+                creditView.visibility = View.VISIBLE
             }
 
             itemView.setOnClickListener {

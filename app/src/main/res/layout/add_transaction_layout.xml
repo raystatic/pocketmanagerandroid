@@ -96,10 +96,17 @@
                 android:textSize="16sp"
                 android:id="@+id/et_add_transaction_desc"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="*Note : If offline, transaction will be added to db when app comes online"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"/>
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:text="Add"
                 android:textColor="#fff"
                 android:background="@drawable/button_background"
