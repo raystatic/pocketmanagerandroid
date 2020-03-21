@@ -80,18 +80,19 @@ class TransactionsRecyclerViewAdapter(var context:Context,
         private val creditView = itemView.findViewById<ImageView>(R.id.view_credit)
 
         fun bindView(transaction: Transaction, context: Context, listener: TransactionInteractor){
-            tvAmount.text =transaction.amount
             tvDate.text = Utility.formatDate(transaction.date)
 
             if (transaction.debit!!){
+                tvAmount.text ="- ${transaction.amount}"
                 tvAmount.setTextColor(context.resources.getColor(R.color.red))
-                debitView.visibility = View.VISIBLE
-                creditView.visibility = View.GONE
+//                debitView.visibility = View.VISIBLE
+//                creditView.visibility = View.GONE
 
             }else{
+                tvAmount.text ="+ ${transaction.amount}"
                 tvAmount.setTextColor(context.resources.getColor(R.color.green))
-                debitView.visibility = View.GONE
-                creditView.visibility = View.VISIBLE
+//                debitView.visibility = View.GONE
+//                creditView.visibility = View.VISIBLE
             }
 
             itemView.setOnClickListener {
