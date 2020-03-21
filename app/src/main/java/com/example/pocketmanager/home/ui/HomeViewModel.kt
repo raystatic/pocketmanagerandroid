@@ -74,7 +74,6 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                Utility.showToast(context,"Here")
                 if (!p0.exists()){
                     prefManager.saveBoolean(Constants.BUDGET_UPDATED,false)
                     Log.d("context_error","Please add amount of this month to get started $context")
@@ -107,6 +106,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                         val noOfdays = amount?.uptoDate?.let { Utility.noOfDaysBWTwoDates(Date(), it) }
                         if (noOfdays?.toInt()!! <0){
                             deleteExistingData(user,dbReference, context)
+                            deleteEarlierTransactions(user,dbReference)
                         }else{
                             textView.text = amount?.balance
                             val uptoDate = amount?.uptoDate?.let { Utility.noOfDaysBWTwoDates(Date(), it) }

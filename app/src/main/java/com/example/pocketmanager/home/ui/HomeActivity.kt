@@ -28,11 +28,11 @@ class HomeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-//        val prefManager = PrefManager(this)
-//        if(!prefManager.getBoolean(Constants.NOTFIRSTRUN)!!){
-//            runTutorial()
-//            prefManager.saveBoolean(Constants.NOTFIRSTRUN,true)
-//        }
+        val prefManager = PrefManager(this)
+        if(!prefManager.getBoolean(Constants.NOTFIRSTRUN)!!){
+            runTutorial()
+            prefManager.saveBoolean(Constants.NOTFIRSTRUN,true)
+        }
 
         viewModel = ViewModelProviders.of(this)[HomeViewModel::class.java]
 
