@@ -2,6 +2,7 @@ package com.example.pocketmanager.home.ui
 
 import android.app.Dialog
 import android.content.Context
+import android.os.Message
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -21,7 +22,9 @@ import com.example.pocketmanager.utils.Utility
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.info_dialog_layout.view.*
+import java.lang.Exception
 import java.util.*
+import java.util.logging.Handler
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -72,8 +75,15 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
             override fun onDataChange(p0: DataSnapshot) {
                 if (!p0.exists()){
-                    Utility.showDialog(context,"Please add amount of this month to get started")
                     prefManager.saveBoolean(Constants.BUDGET_UPDATED,false)
+                    Log.d("context_error","Please add amount of this month to get started $context")
+
+                    try{
+                        Utility.showDialog(context,"Please add amount of this month to get started")
+                    }catch (e:Exception){
+                        Log.d("dialog_error",e.message!!)
+                        Utility.showToast(context,"Please add amount of this month to get started")
+                    }
                 }else{
                     val amount = p0.getValue(Amount::class.java)
 
@@ -91,9 +101,14 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                         tvEndDate.text = Utility.formatDate(amount?.uptoDate.toString())
 
                     }else if (dialog == null && textView!=null && tvDaysLeft!=null) {
-                        textView.text = amount?.balance
-                        val uptoDate = amount?.uptoDate?.let { Utility.noOfDaysBWTwoDates(Date(), it) }
-                        tvDaysLeft.text = uptoDate
+                        val noOfdays = amount?.uptoDate?.let { Utility.noOfDaysBWTwoDates(Date(), it) }
+                        if (noOfdays?.toInt()!! <0){
+                            dbReference.child("/${user?.displayName}").setValue(null)
+                        }else{
+                            textView.text = amount?.balance
+                            val uptoDate = amount?.uptoDate?.let { Utility.noOfDaysBWTwoDates(Date(), it) }
+                            tvDaysLeft.text = uptoDate
+                        }
                     }
                 }
             }
