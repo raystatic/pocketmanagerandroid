@@ -104,6 +104,11 @@ class HomeActivity : BaseActivity() {
         )
 
         sequence.addSequenceItem(
+            update_amount_card_action_bar,
+            "Click this to add or update budget of the month", "GOT IT"
+        )
+
+        sequence.addSequenceItem(
             add_transaction_card_action_bar,
             "Click this to add a new transaction", "GOT IT"
         )
@@ -111,11 +116,6 @@ class HomeActivity : BaseActivity() {
         sequence.addSequenceItem(
             info_card_action_bar,
             "Click this to a view summary of month", "GOT IT"
-        )
-
-        sequence.addSequenceItem(
-            update_amount_card_action_bar,
-            "Click this to add or update budget of the month", "GOT IT"
         )
 
         sequence.addSequenceItem(
