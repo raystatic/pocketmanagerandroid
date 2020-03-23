@@ -9,6 +9,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -124,7 +125,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         dbReference.child("/${user?.displayName}/budget").setValue(null)
     }
 
-    fun showTransactionDialog(context: Context, dbReference: DatabaseReference){
+    fun showTransactionDialog(context: Context, dbReference: DatabaseReference, transaction: Transaction?){
         val dialog = Dialog(context)
         dialog.setContentView(R.layout.add_transaction_layout)
 
@@ -136,6 +137,15 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         val etDesc = dialog.findViewById<EditText>(R.id.et_add_transaction_desc)
         val spinner = dialog.findViewById<Spinner>(R.id.spinner_add_transaction)
         val linDate = dialog.findViewById<LinearLayout>(R.id.linDate)
+
+        if (transaction!=null){
+            etAmount.setText(transaction.amount)
+            etReceiver.setText(transaction.reciever)
+            etSender.setText(transaction.sender)
+            etDate.text = Utility.formatDate(transaction.date)
+            etMode.setText(transaction.mode)
+            etDesc.setText(transaction.note)
+        }
 
         spinner.onItemSelectedListener = object : OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -160,8 +170,9 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
         val btnAdd = dialog.findViewById<Button>(R.id.btn_add_transaction_confrm)
 
-        etDate.text = Utility.formatDate(Date().toString())
-
+        if (transaction==null){
+            etDate.text = Utility.formatDate(Date().toString())
+        }
         var transactionDate = Date()
 
         val calender = Calendar.getInstance()
@@ -222,11 +233,20 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                             debit = false
                         }
 
-                        val key = dbReference.child(Constants.USER).push().key.toString()
+                        if (transaction!=null){
+                            val editTransaction = Transaction(transaction.transactionId,amount,desc,receiver,sender,date,type,mode,debit, transactionDate)
 
-                        val transaction = Transaction(key,amount,desc,receiver,sender,date,type,mode,debit, transactionDate)
+                            addTransactionToDB(context,editTransaction,dbReference,dialog,
+                                transaction.transactionId!!
+                            )
+                        }else{
+                            val key = dbReference.child(Constants.USER).push().key.toString()
 
-                        addTransactionToDB(context,transaction,dbReference,dialog,key)
+                            val newTransaction = Transaction(key,amount,desc,receiver,sender,date,type,mode,debit, transactionDate)
+
+                            addTransactionToDB(context,newTransaction,dbReference,dialog,key)
+                        }
+
                     }else{
                         Utility.showToast(context,"Fill data properly!")
                     }
@@ -457,7 +477,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                         if (recyclerView.visibility == View.GONE){
                             recyclerView.visibility = View.VISIBLE
                         }
-                        val adapter = TransactionsRecyclerViewAdapter(context, sortedTransaction, this@HomeViewModel)
+                        val adapter = TransactionsRecyclerViewAdapter(context, sortedTransaction, this@HomeViewModel, dbReference)
                         val layoutManager = LinearLayoutManager(context)
                         recyclerView.layoutManager = layoutManager
                         recyclerView.adapter = adapter
@@ -483,11 +503,11 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         }
     }
 
-    override fun onTransactionClicked(transaction: Transaction, context: Context) {
-        showTransactionInfoDialog(transaction,context)
+    override fun onTransactionClicked(transaction: Transaction, context: Context, dbreference: DatabaseReference) {
+        showTransactionInfoDialog(transaction,context,dbreference)
     }
 
-    private fun showTransactionInfoDialog(transaction: Transaction,context: Context) {
+    private fun showTransactionInfoDialog(transaction: Transaction,context: Context,dbReference: DatabaseReference) {
         val dialog = Dialog(context)
         dialog.setContentView(R.layout.transaction_dialog)
 
@@ -503,6 +523,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         val linSender = dialog.findViewById<LinearLayout>(R.id.lin_sender_transaction)
         val linReceiver = dialog.findViewById<LinearLayout>(R.id.lin_transaction_receiver)
         val tvType = dialog.findViewById<TextView>(R.id.tv_transaction_type)
+        val editCard = dialog.findViewById<CardView>(R.id.card_edit_transaction)
 
         val window = dialog.window
         window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT)
@@ -529,16 +550,14 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             dialog.cancel()
         }
 
+        editCard.setOnClickListener {
+            if (dialog.isShowing){
+                dialog.cancel()
+                showTransactionDialog(context,dbReference,transaction)
+            }
+        }
+
         dialog.show()
         dialog.setCanceledOnTouchOutside(true)
-    }
-
-    fun test(context: Context) {
-        val calender = Calendar.getInstance()
-        DatePickerDialog(context,DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-            val newDate = Calendar.getInstance()
-            newDate.set(year,month,dayOfMonth)
-            Utility.showToast(context,Utility.formatDate(newDate.time.toString()))
-        },calender.get(Calendar.YEAR),calender.get(Calendar.MONTH),calender.get(Calendar.DAY_OF_MONTH))
     }
 }

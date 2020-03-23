@@ -21,7 +21,8 @@ import kotlin.collections.ArrayList
 
 class TransactionsRecyclerViewAdapter(var context:Context,
                                       var transactions:ArrayList<Transaction>,
-                                      var listener:TransactionInteractor) :
+                                      var listener:TransactionInteractor,
+                                      var dbreference: DatabaseReference) :
     RecyclerView.Adapter<TransactionsRecyclerViewAdapter.TransactionsViewHolder>() {
 
 
@@ -66,7 +67,7 @@ class TransactionsRecyclerViewAdapter(var context:Context,
     }
 
     override fun onBindViewHolder(holder: TransactionsViewHolder, position: Int) {
-        holder.bindView(transactions[position], context,listener)
+        holder.bindView(transactions[position], context,listener, dbreference)
     }
 
     override fun getItemCount(): Int {
@@ -77,7 +78,7 @@ class TransactionsRecyclerViewAdapter(var context:Context,
         private val tvAmount = itemView.findViewById<TextView>(R.id.tv_amount_transaction)
         private val tvDate = itemView.findViewById<TextView>(R.id.tv_date_transaction)
 
-        fun bindView(transaction: Transaction, context: Context, listener: TransactionInteractor){
+        fun bindView(transaction: Transaction, context: Context, listener: TransactionInteractor, dbreference: DatabaseReference){
             tvDate.text = Utility.formatDate(transaction.date)
 
             if (transaction.debit!!){
@@ -90,7 +91,7 @@ class TransactionsRecyclerViewAdapter(var context:Context,
             }
 
             itemView.setOnClickListener {
-                listener.onTransactionClicked(transaction,context)
+                listener.onTransactionClicked(transaction,context,dbreference)
             }
 
         }
@@ -98,7 +99,7 @@ class TransactionsRecyclerViewAdapter(var context:Context,
     }
 
     interface TransactionInteractor{
-        fun onTransactionClicked(transaction: Transaction, context: Context)
+        fun onTransactionClicked(transaction: Transaction, context: Context, dbreference: DatabaseReference)
         fun onTransactionsLoaded(progressBar: ProgressBar, msg:String?, context: Context)
     }
 
