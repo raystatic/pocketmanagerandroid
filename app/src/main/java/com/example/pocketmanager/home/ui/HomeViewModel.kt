@@ -446,15 +446,23 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                     }else{
                         p0.children.forEach {
                             val transaction = it.getValue(Transaction::class.java)
-                            if (Date().after(transaction?.transactDate)){
-                                transactions.add(transaction!!)
-                            }
+//                            if (Date().after(transaction?.transactDate)){
+//
+//                            }
+                       //     Log.d("debug_transactions",it.)
+                            transactions.add(transaction!!)
                         }
+
+                        transactions.forEach {
+                            Log.d("unsorted_transactions",it.date!!)
+                        }
+
+                        val sortedTransaction = Utility.sortTransactions(transactions)
 
                         if (recyclerView.visibility == View.GONE){
                             recyclerView.visibility = View.VISIBLE
                         }
-                        val adapter = TransactionsRecyclerViewAdapter(context, transactions, this@HomeViewModel)
+                        val adapter = TransactionsRecyclerViewAdapter(context, sortedTransaction, this@HomeViewModel)
                         val layoutManager = LinearLayoutManager(context)
                         recyclerView.layoutManager = layoutManager
                         recyclerView.adapter = adapter

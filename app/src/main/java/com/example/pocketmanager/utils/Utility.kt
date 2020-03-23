@@ -3,13 +3,16 @@ package com.example.pocketmanager.utils
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.example.pocketmanager.home.model.Transaction
 import com.google.android.material.snackbar.Snackbar
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 class Utility {
     companion object {
@@ -56,6 +59,19 @@ class Utility {
 
             val dialog = builder.create()
             dialog.show()
+        }
+
+        fun sortTransactions(transactions: ArrayList<Transaction>): ArrayList<Transaction> {
+            val sortedDatesDescending =
+                transactions.sortedWith(compareBy {
+                    it.transactDate
+                }).reversed()
+
+            sortedDatesDescending.forEach {
+                Log.d("sort_transactions",it.date!!)
+            }
+
+            return java.util.ArrayList(sortedDatesDescending)
         }
 
     }
