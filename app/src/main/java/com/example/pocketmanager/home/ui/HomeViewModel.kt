@@ -3,7 +3,6 @@ package com.example.pocketmanager.home.ui
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
-import android.os.Message
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -23,10 +22,8 @@ import com.example.pocketmanager.utils.Utility
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.info_dialog_layout.view.*
 import java.lang.Exception
 import java.util.*
-import java.util.logging.Handler
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -225,9 +222,11 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                             debit = false
                         }
 
-                        val transaction = Transaction(amount,desc,receiver,sender,date,type,mode,debit, transactionDate)
+                        val key = dbReference.child(Constants.USER).push().key.toString()
 
-                        addTransactionToDB(context,transaction,dbReference,dialog)
+                        val transaction = Transaction(key,amount,desc,receiver,sender,date,type,mode,debit, transactionDate)
+
+                        addTransactionToDB(context,transaction,dbReference,dialog,key)
                     }else{
                         Utility.showToast(context,"Fill data properly!")
                     }
@@ -247,7 +246,8 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         context: Context,
         transaction: Transaction,
         dbReference: DatabaseReference,
-        dialog: Dialog
+        dialog: Dialog,
+        transactionKey: String
     ) {
         val user = FirebaseAuth.getInstance().currentUser
         dbReference.child("/${user?.displayName}/budget").runTransaction(object : com.google.firebase.database.Transaction.Handler{
@@ -261,7 +261,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                 val amount = p0.getValue(Amount::class.java)
                     ?: return com.google.firebase.database.Transaction.success(p0)
 
-                addTransactionToDb(context,transaction,dbReference,dialog)
+                addTransactionToDb(context,transaction,dbReference,dialog,transactionKey)
 
                 val reciever = transaction.reciever
                 val sender = transaction.sender
@@ -296,13 +296,12 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         context: Context,
         transaction: Transaction,
         dbReference: DatabaseReference,
-        dialog: Dialog
+        dialog: Dialog,
+        transactionKey:String
     ) {
 
         val title = dialog.findViewById<TextView>(R.id.tv_add_transaction_title)
         title.text = "Uploading transaction..."
-
-        val key = dbReference.child(Constants.USER).push().key.toString()
 
         val transactionMap = transaction.toMap()
 
@@ -310,7 +309,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
         val user = FirebaseAuth.getInstance().currentUser
 
-        childUpdates["/${user?.displayName}/transactions/$key"] = transactionMap
+        childUpdates["/${user?.displayName}/transactions/$transactionKey"] = transactionMap
 //
         dbReference.updateChildren(childUpdates)
             .addOnCompleteListener {
@@ -446,10 +445,6 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                     }else{
                         p0.children.forEach {
                             val transaction = it.getValue(Transaction::class.java)
-//                            if (Date().after(transaction?.transactDate)){
-//
-//                            }
-                       //     Log.d("debug_transactions",it.)
                             transactions.add(transaction!!)
                         }
 
@@ -497,6 +492,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         dialog.setContentView(R.layout.transaction_dialog)
 
         val button  = dialog.findViewById<Button>(R.id.btn_ok_transaction)
+        val tvTransactionId = dialog.findViewById<TextView>(R.id.tv_transaction_ID)
         val tvAmount = dialog.findViewById<TextView>(R.id.tv_transaction_amount)
         val tvDebit = dialog.findViewById<TextView>(R.id.tv_transaction_debit)
         val tvDate = dialog.findViewById<TextView>(R.id.tv_transaction_date)
@@ -511,6 +507,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         val window = dialog.window
         window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT)
 
+        tvTransactionId.text = transaction.transactionId
         tvAmount.text = transaction.amount
         tvDebit.text = transaction.debit.toString()
         tvDate.text = Utility.formatDate(transaction.date)
