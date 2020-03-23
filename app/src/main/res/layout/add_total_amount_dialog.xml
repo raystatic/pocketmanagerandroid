@@ -28,7 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,9 +50,9 @@
         android:layout_height="wrap_content"
         android:text="Duration: "
         android:id="@+id/tv_duration_preview"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_marginTop="10dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <TextView
         android:layout_width="wrap_content"
