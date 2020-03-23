@@ -137,8 +137,10 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         val etDesc = dialog.findViewById<EditText>(R.id.et_add_transaction_desc)
         val spinner = dialog.findViewById<Spinner>(R.id.spinner_add_transaction)
         val linDate = dialog.findViewById<LinearLayout>(R.id.linDate)
+        val tvTitle = dialog.findViewById<TextView>(R.id.tv_add_transaction_title)
 
         if (transaction!=null){
+            tvTitle.text = "Update Transaction"
             etAmount.setText(transaction.amount)
             etReceiver.setText(transaction.reciever)
             etSender.setText(transaction.sender)
@@ -234,6 +236,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                         }
 
                         if (transaction!=null){
+                            removeTransactionFromDB(context,transaction,dbReference,transaction.transactionId!!)
                             val editTransaction = Transaction(transaction.transactionId,amount,desc,receiver,sender,date,type,mode,debit, transactionDate)
 
                             addTransactionToDB(context,editTransaction,dbReference,dialog,
@@ -303,6 +306,53 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
                     amount.balance = balance.toString()
                     amount.spent = (amount.spent.toDouble() - received).toString()
+                }
+
+                p0.value = amount
+
+                return com.google.firebase.database.Transaction.success(p0)
+            }
+        })
+    }
+
+    private fun removeTransactionFromDB(
+        context: Context,
+        transaction: Transaction,
+        dbReference: DatabaseReference,
+        transactionKey: String
+    ) {
+        val user = FirebaseAuth.getInstance().currentUser
+        dbReference.child("/${user?.displayName}/budget").runTransaction(object : com.google.firebase.database.Transaction.Handler{
+
+            override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
+                Log.d("transaction_error","${p0}")
+                Utility.showToast(context,"Transaction competed with ${p0?.message}")
+            }
+
+            override fun doTransaction(p0: MutableData): com.google.firebase.database.Transaction.Result {
+                val amount = p0.getValue(Amount::class.java)
+                    ?: return com.google.firebase.database.Transaction.success(p0)
+
+
+                dbReference.child("/${user?.displayName}/transactions/$transactionKey").setValue(null)
+
+                val netBalance = amount.balance.toDouble()
+
+                if (transaction.debit!!) {
+                    val spent = transaction.amount?.toDouble()
+
+                    val balance = netBalance + spent!!
+
+                    amount.balance = balance.toString()
+
+                    amount.spent = (amount.spent.toDouble() - spent).toString()
+
+                }else{
+                    val received = transaction.amount?.toDouble()
+                    val balance = netBalance - received!!
+
+                    amount.balance = balance.toString()
+                    amount.spent = (amount.spent.toDouble() + received).toString()
                 }
 
                 p0.value = amount
