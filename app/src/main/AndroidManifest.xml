@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".utils.BaseActivity"></activity>
+        <activity android:name=".userflow.UserFlowActivity"></activity>
+        <activity android:name=".utils.BaseActivity" />
         <activity android:name=".home.ui.HomeActivity" />
         <activity android:name=".authentication.LoginActivity">
             <intent-filter>
@@ -21,10 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".authentication.RegisterActivity"></activity>
+        <activity android:name=".authentication.RegisterActivity" />
+
         <service
-            android:exported="false"
-            android:name="com.novoda.merlin.MerlinService" />
+            android:name="com.novoda.merlin.MerlinService"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -2,10 +2,12 @@ package com.example.pocketmanager.home.ui
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import com.example.pocketmanager.R
+import com.example.pocketmanager.userflow.UserFlowActivity
 import com.example.pocketmanager.utils.BaseActivity
 import com.example.pocketmanager.utils.Constants
 import com.example.pocketmanager.utils.GenerateRandomString
@@ -30,8 +32,14 @@ class HomeActivity : BaseActivity() {
 
         val prefManager = PrefManager(this)
         if(!prefManager.getBoolean(Constants.NOTFIRSTRUN)!!){
-            runTutorial()
-            prefManager.saveBoolean(Constants.NOTFIRSTRUN,true)
+
+            if(!prefManager.getBoolean(Constants.INTRODUCTION_DONE)!!){
+                startActivity(Intent(this,UserFlowActivity::class.java))
+                finish()
+            }else{
+                runTutorial()
+                prefManager.saveBoolean(Constants.NOTFIRSTRUN,true)
+            }
         }
 
         viewModel = ViewModelProviders.of(this)[HomeViewModel::class.java]
