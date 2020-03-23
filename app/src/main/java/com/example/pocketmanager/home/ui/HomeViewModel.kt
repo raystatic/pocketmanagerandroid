@@ -138,6 +138,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         val spinner = dialog.findViewById<Spinner>(R.id.spinner_add_transaction)
         val linDate = dialog.findViewById<LinearLayout>(R.id.linDate)
         val tvTitle = dialog.findViewById<TextView>(R.id.tv_add_transaction_title)
+        val btnAdd = dialog.findViewById<Button>(R.id.btn_add_transaction_confrm)
 
         if (transaction!=null){
             tvTitle.text = "Update Transaction"
@@ -147,6 +148,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             etDate.text = Utility.formatDate(transaction.date)
             etMode.setText(transaction.mode)
             etDesc.setText(transaction.note)
+            btnAdd.text = "Update"
         }
 
         spinner.onItemSelectedListener = object : OnItemSelectedListener{
@@ -169,8 +171,6 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         spinner.adapter = aa
-
-        val btnAdd = dialog.findViewById<Button>(R.id.btn_add_transaction_confrm)
 
         if (transaction==null){
             etDate.text = Utility.formatDate(Date().toString())
@@ -573,7 +573,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         val linSender = dialog.findViewById<LinearLayout>(R.id.lin_sender_transaction)
         val linReceiver = dialog.findViewById<LinearLayout>(R.id.lin_transaction_receiver)
         val tvType = dialog.findViewById<TextView>(R.id.tv_transaction_type)
-        val editCard = dialog.findViewById<CardView>(R.id.card_edit_transaction)
+        val editCard = dialog.findViewById<ImageView>(R.id.img_edit_transaction)
 
         val window = dialog.window
         window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT)
