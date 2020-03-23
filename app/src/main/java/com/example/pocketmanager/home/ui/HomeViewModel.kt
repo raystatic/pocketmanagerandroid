@@ -226,7 +226,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                         etReceiver.error = null
                     }
 
-                    if (amount.isNotEmpty() && mode.isNotEmpty() && date.isNotEmpty() && desc.isNotEmpty()){
+                    if (amount.isNotEmpty() && mode.isNotEmpty() && date.isNotEmpty()){
                         var debit = false
 
                         if (receiver.isNotEmpty()) {
@@ -574,6 +574,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         val linReceiver = dialog.findViewById<LinearLayout>(R.id.lin_transaction_receiver)
         val tvType = dialog.findViewById<TextView>(R.id.tv_transaction_type)
         val editCard = dialog.findViewById<ImageView>(R.id.img_edit_transaction)
+        val linDescription = dialog.findViewById<LinearLayout>(R.id.lin_description_transaction)
 
         val window = dialog.window
         window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT)
@@ -594,6 +595,12 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         }else{
             linSender.visibility = View.VISIBLE
             linReceiver.visibility = View.GONE
+        }
+
+        if (transaction.note!!.isEmpty()){
+            if (linDescription.visibility == View.VISIBLE){
+                linDescription.visibility = View.GONE
+            }
         }
 
         button.setOnClickListener {
