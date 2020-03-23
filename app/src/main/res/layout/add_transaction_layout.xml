@@ -58,13 +58,28 @@
                 android:hint="Mode of Payment"
                 android:id="@+id/et_add_transaction_mode"/>
 
-            <EditText
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="10dp"
-                android:hint="Date"
-                android:textSize="16sp"
-                android:id="@+id/et_add_transaction_date"/>
+                android:id="@+id/linDate">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tap to change Date: "
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="date"
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp"
+                    android:id="@+id/et_add_transaction_date"/>
+
+            </LinearLayout>
 
 
             <LinearLayout

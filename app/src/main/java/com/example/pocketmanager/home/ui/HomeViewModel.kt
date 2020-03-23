@@ -1,5 +1,6 @@
 package com.example.pocketmanager.home.ui
 
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Message
@@ -133,10 +134,11 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         val etAmount = dialog.findViewById<EditText>(R.id.et_add_transaction_amount)
         val etReceiver = dialog.findViewById<EditText>(R.id.et_add_transaction_receiver)
         val etSender = dialog.findViewById<EditText>(R.id.et_add_transaction_sender)
-        val etDate = dialog.findViewById<EditText>(R.id.et_add_transaction_date)
+        val etDate = dialog.findViewById<TextView>(R.id.et_add_transaction_date)
         val etMode = dialog.findViewById<EditText>(R.id.et_add_transaction_mode)
         val etDesc = dialog.findViewById<EditText>(R.id.et_add_transaction_desc)
         val spinner = dialog.findViewById<Spinner>(R.id.spinner_add_transaction)
+        val linDate = dialog.findViewById<LinearLayout>(R.id.linDate)
 
         spinner.onItemSelectedListener = object : OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -161,7 +163,23 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
         val btnAdd = dialog.findViewById<Button>(R.id.btn_add_transaction_confrm)
 
-        etDate.setText(Utility.formatDate(Date().toString()))
+        etDate.text = Utility.formatDate(Date().toString())
+
+        var transactionDate = Date()
+
+        val calender = Calendar.getInstance()
+
+        val datePickerDialog = DatePickerDialog(context,DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            val newDate = Calendar.getInstance()
+            newDate.set(year,month,dayOfMonth)
+            //Utility.showToast(context,)
+            etDate.text = Utility.formatDate(newDate.time.toString())
+            transactionDate = newDate.time
+        },calender.get(Calendar.YEAR),calender.get(Calendar.MONTH),calender.get(Calendar.DAY_OF_MONTH))
+
+        linDate.setOnClickListener {
+            datePickerDialog.show()
+        }
 
         //etSender.setText("me")
 
@@ -177,7 +195,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                 val amount = etAmount.text.toString().trim()
                 val receiver = etReceiver.text.toString().trim()
                 val sender = etSender.text.toString().trim()
-                val date = Date().toString()
+                val date = transactionDate.toString()
                 val mode = etMode.text.toString().trim()
                 val desc = etDesc.text.toString().trim()
                 val type = EXPENDITURE_TYPE
@@ -207,7 +225,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
                             debit = false
                         }
 
-                        val transaction = Transaction(amount,desc,receiver,sender,date,type,mode,debit, Date())
+                        val transaction = Transaction(amount,desc,receiver,sender,date,type,mode,debit, transactionDate)
 
                         addTransactionToDB(context,transaction,dbReference,dialog)
                     }else{
@@ -508,5 +526,14 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
         dialog.show()
         dialog.setCanceledOnTouchOutside(true)
+    }
+
+    fun test(context: Context) {
+        val calender = Calendar.getInstance()
+        DatePickerDialog(context,DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            val newDate = Calendar.getInstance()
+            newDate.set(year,month,dayOfMonth)
+            Utility.showToast(context,Utility.formatDate(newDate.time.toString()))
+        },calender.get(Calendar.YEAR),calender.get(Calendar.MONTH),calender.get(Calendar.DAY_OF_MONTH))
     }
 }

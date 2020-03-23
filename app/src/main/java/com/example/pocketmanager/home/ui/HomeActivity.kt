@@ -45,6 +45,7 @@ class HomeActivity : BaseActivity() {
 
         add_transaction_card_action_bar.setOnClickListener {
             viewModel!!.showTransactionDialog(this,dbReference)
+            //viewModel!!.test(this)
         }
 
         info_card_action_bar.setOnClickListener {
