@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary">
 
-    <androidx.cardview.widget.CardView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -37,9 +37,9 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
-    <androidx.cardview.widget.CardView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -73,9 +73,9 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
-    <androidx.cardview.widget.CardView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
@@ -108,16 +108,18 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
-    <androidx.cardview.widget.CardView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:id="@+id/add_transaction_card_action_bar"
         android:layout_toStartOf="@+id/info_card_action_bar"
         android:layout_centerVertical="true"
-        android:layout_margin="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -142,16 +144,18 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
-    <androidx.cardview.widget.CardView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:id="@+id/info_card_action_bar"
         android:layout_toStartOf="@+id/logout_card_action_bar"
         android:layout_centerVertical="true"
-        android:layout_margin="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -176,10 +180,10 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
 
-    <androidx.cardview.widget.CardView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
@@ -187,7 +191,9 @@
         android:id="@+id/logout_card_action_bar"
         android:background="@color/colorPrimary"
         android:layout_centerVertical="true"
-        android:layout_margin="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -212,6 +218,6 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
 </RelativeLayout>
