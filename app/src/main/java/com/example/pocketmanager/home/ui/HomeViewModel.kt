@@ -281,8 +281,11 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         dbReference.child("/${user?.displayName}/budget").runTransaction(object : com.google.firebase.database.Transaction.Handler{
 
             override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
-                Log.d("transaction_error","${p0}")
-                Utility.showToast(context,"Transaction competed with ${p0?.message}")
+                if (p0!=null){
+                    Utility.showToast(context,"Transaction competed")
+                }else{
+                    Log.d("transaction_error","${p0?.message}")
+                }
             }
 
             override fun doTransaction(p0: MutableData): com.google.firebase.database.Transaction.Result {
