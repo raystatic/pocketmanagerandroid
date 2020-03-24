@@ -123,6 +123,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
     private fun deleteExistingData(user: FirebaseUser?, dbReference: DatabaseReference, context: Context) {
         dbReference.child("/${user?.displayName}/budget").setValue(null)
+        Log.d("delete_error","deleteExistingData")
     }
 
     fun showTransactionDialog(context: Context, dbReference: DatabaseReference, transaction: Transaction?){
@@ -335,6 +336,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
 
                 dbReference.child("/${user?.displayName}/transactions/$transactionKey").setValue(null)
+                Log.d("delete_error","removeTransactionFromDB")
 
                 val netBalance = amount.balance.toDouble()
 
@@ -401,41 +403,72 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         dialog.setTitle("Add Total Amount")
 
         val etTotalAmount = dialog.findViewById<EditText>(R.id.et_total_amount_home)
-        val spinner = dialog.findViewById<Spinner>(R.id.spinner_months)
+      //  val spinner = dialog.findViewById<Spinner>(R.id.spinner_months)
         val tvDuration = dialog.findViewById<TextView>(R.id.tv_duration_preview)
+        val linStartDate = dialog.findViewById<LinearLayout>(R.id.lin_start_date)
+        val tvStartDate = dialog.findViewById<TextView>(R.id.tv_start_date_budget)
 
-        tvDuration.visibility = View.GONE
+//        tvDuration.visibility = View.GONE
+
+        var startDate = Date()
+
+        tvStartDate.text = Utility.formatDate(startDate.toString())
 
         val calendar =  Calendar.getInstance()
 
-        val aa = ArrayAdapter(context, android.R.layout.simple_spinner_item, monthList)
-
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        spinner.adapter = aa
-
-        spinner.onItemSelectedListener = object : OnItemSelectedListener{
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                monthDuration = monthList[position]
-                calendar.add(Calendar.MONTH,monthDuration)
-                tvDuration.visibility = View.VISIBLE
-                tvDuration.text = "${Utility.formatDate(Date().toString())} to ${Utility.formatDate(calendar.time.toString())}"
-            }
-
-        }
-
         calendar.add(Calendar.MONTH,monthDuration)
         tvDuration.visibility = View.VISIBLE
-        tvDuration.text = "${Utility.formatDate(Date().toString())} to ${Utility.formatDate(calendar.time.toString())}"
+        var endDate = calendar.time
+        tvDuration.text = "${Utility.formatDate(startDate.toString())} to ${Utility.formatDate(calendar.time.toString())}"
+
+       // val aa = ArrayAdapter(context, android.R.layout.simple_spinner_item, monthList)
+
+       // aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+//        spinner.adapter = aa
+//
+//        spinner.onItemSelectedListener = object : OnItemSelectedListener{
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//
+//            }
+//
+//            override fun onItemSelected(
+//                parent: AdapterView<*>?,
+//                view: View?,
+//                position: Int,
+//                id: Long
+//            ) {
+//                monthDuration = monthList[position]
+//                calendar.add(Calendar.MONTH,monthDuration)
+//                tvDuration.visibility = View.VISIBLE
+//                tvDuration.text = "${Utility.formatDate(Date().toString())} to ${Utility.formatDate(calendar.time.toString())}"
+//            }
+//
+//        }
+
+        val newCalnedar = Calendar.getInstance()
+
+        val datePickerDialog = DatePickerDialog(context,DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            val newDate = Calendar.getInstance()
+            newDate.set(year,month,dayOfMonth)
+            //Utility.showToast(context,)
+            //etDate.text = Utility.formatDate(newDate.time.toString())
+            //transactionDate = newDate.time
+
+            startDate = newDate.time
+            newDate.add(Calendar.MONTH,monthDuration)
+            endDate = newDate.time
+
+            tvStartDate.text = Utility.formatDate(startDate.toString())
+
+            tvDuration.text = "${Utility.formatDate(startDate.toString())} to ${Utility.formatDate(endDate.toString())}"
+
+        },newCalnedar.get(Calendar.YEAR),newCalnedar.get(Calendar.MONTH),newCalnedar.get(Calendar.DAY_OF_MONTH))
+
+        linStartDate.setOnClickListener {
+            datePickerDialog.show()
+        }
+
 
         val window = dialog.window
         window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT)
@@ -447,7 +480,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             if (!TextUtils.isEmpty(totalAmount)){
                 val today = Date().toString()
                 val spent = 0
-                val amount = Amount(totalAmount, today, totalAmount,spent.toString(),calendar.time, Date())
+                val amount = Amount(totalAmount, today, totalAmount,spent.toString(),endDate, startDate)
                 addAmountToDb(amount, dbReference, context, dialog, etTotalAmount,tvBalanec,tvDaysLeft)
             }else{
                 etTotalAmount.error = "Cannot be empty"
@@ -478,7 +511,8 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             .addOnCompleteListener {
                 dialog.cancel()
                 if (it.isSuccessful){
-                    deleteEarlierTransactions(user,dbReference)
+                    //deleteEarlierTransactions(user,dbReference)
+                    deleteTransactionsOutofDuration(user,dbReference,amount.startDate, amount.uptoDate)
                     Utility.showToast(context,"Amount added")
                     readBalancefromDB(context,dbReference,tvBalanec,tvDaysLeft)
                 }else{
@@ -488,9 +522,49 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
     }
 
+    private fun deleteTransactionsOutofDuration(
+        user: FirebaseUser?,
+        dbReference: DatabaseReference,
+        startDate: Date,
+        uptoDate: Date
+    ) {
+        val deleteableTransactionIds = ArrayList<String>()
+        deleteableTransactionIds.clear()
+        dbReference.child("/${user?.displayName}/transactions")
+            .addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.exists()){
+                        p0.children.forEach {
+                            val transaction = it.getValue(Transaction::class.java)
+
+                            Log.d("delete_trans_error","${transaction?.amount} ${transaction?.transactDate!!.before(startDate)} ${transaction.transactDate!!.after(uptoDate)}")
+
+                            if (Utility.noOfDaysBWTwoDates(startDate, transaction.transactDate!!).toInt()<0){
+                                deleteableTransactionIds.add(transaction.transactionId!!)
+                            }
+
+                        }
+                    }
+
+                    if (deleteableTransactionIds.isNotEmpty()){
+                        deleteableTransactionIds.forEach {
+                            dbReference.child("/${user?.displayName}/transactions/$it").setValue(null)
+                            Log.d("delete_error","deleteTransactionsOutofDuration")
+                        }
+                    }
+
+                }
+            })
+    }
+
     private fun deleteEarlierTransactions(user: FirebaseUser?, dbReference: DatabaseReference) {
         dbReference.child("${user?.displayName}/transactions")
             .setValue(null)
+        Log.d("delete_error","deleteEarlierTransactions")
     }
 
     fun readTransactions(context: Context, dbReference: DatabaseReference, recyclerView: RecyclerView, progressBar: ProgressBar, textView: TextView) {

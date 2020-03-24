@@ -45,14 +45,45 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Duration: "
-        android:id="@+id/tv_duration_preview"
-        android:visibility="visible"
+        android:orientation="vertical"
         android:layout_marginTop="10dp"
-        android:textSize="16sp" />
+        android:visibility="visible"
+        android:id="@+id/lin_start_date">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Date : (Tap to change)"
+                />
+
+            <TextView
+                android:id="@+id/tv_start_date_budget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="Fri 22 Mar 2020"/>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Duration: "
+            android:id="@+id/tv_duration_preview"
+            android:visibility="visible"
+            android:layout_marginTop="10dp"
+            android:textSize="16sp" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
