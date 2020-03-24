@@ -3,6 +3,7 @@ package com.example.pocketmanager.home.ui
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
+import android.media.Image
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -653,6 +654,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         val tvType = dialog.findViewById<TextView>(R.id.tv_transaction_type)
         val editCard = dialog.findViewById<ImageView>(R.id.img_edit_transaction)
         val linDescription = dialog.findViewById<LinearLayout>(R.id.lin_description_transaction)
+        val imgDelete = dialog.findViewById<ImageView>(R.id.img_delete_transaction)
 
         val window = dialog.window
         window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT)
@@ -689,6 +691,14 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             if (dialog.isShowing){
                 dialog.cancel()
                 showTransactionDialog(context,dbReference,transaction)
+            }
+        }
+
+
+        imgDelete.setOnClickListener {
+            removeTransactionFromDB(context,transaction,dbReference, transaction.transactionId!!)
+            if (dialog.isShowing){
+                dialog.cancel()
             }
         }
 
