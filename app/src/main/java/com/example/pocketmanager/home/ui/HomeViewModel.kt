@@ -98,7 +98,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
                         tvTotalAmount.text = amount?.amount
                         tvBalanceAmount.text = amount?.balance
-                        tvDateUpdated.text = Utility.formatDate(amount?.date)
+                        tvDateUpdated.text = Utility.formatDate(amount?.startDate.toString())
                         tvSpentAmount.text = amount?.spent
                         tvEndDate.text = Utility.formatDate(amount?.uptoDate.toString())
 
@@ -142,6 +142,8 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
         val tvTitle = dialog.findViewById<TextView>(R.id.tv_add_transaction_title)
         val btnAdd = dialog.findViewById<Button>(R.id.btn_add_transaction_confrm)
 
+        var transactionDate = Date()
+
         if (transaction!=null){
             tvTitle.text = "Update Transaction"
             etAmount.setText(transaction.amount)
@@ -150,6 +152,7 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
             etDate.text = Utility.formatDate(transaction.date)
             etMode.setText(transaction.mode)
             etDesc.setText(transaction.note)
+            transactionDate = transaction.transactDate!!
             btnAdd.text = "Update"
         }
 
@@ -176,8 +179,8 @@ class HomeViewModel: ViewModel(), TransactionsRecyclerViewAdapter.TransactionInt
 
         if (transaction==null){
             etDate.text = Utility.formatDate(Date().toString())
+            transactionDate = Date()
         }
-        var transactionDate = Date()
 
         val calender = Calendar.getInstance()
 
