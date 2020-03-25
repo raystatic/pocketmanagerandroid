@@ -1,4 +1,4 @@
-package com.example.pocketmanager.utils
+package com.walletLog.pocketmanager.utils
 
 import android.content.Context
 import android.content.SharedPreferences

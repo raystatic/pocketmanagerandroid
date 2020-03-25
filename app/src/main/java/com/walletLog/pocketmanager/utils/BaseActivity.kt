@@ -1,8 +1,8 @@
-package com.example.pocketmanager.utils
+package com.walletLog.pocketmanager.utils
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.pocketmanager.R
+import com.walletLog.pocketmanager.R
 import com.novoda.merlin.Merlin
 
 

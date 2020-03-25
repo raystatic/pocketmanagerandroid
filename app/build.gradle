@@ -8,7 +8,7 @@ android {
     buildToolsVersion "29.0.2"
 
     defaultConfig {
-        applicationId "com.example.pocketmanager"
+        applicationId "com.walletLog.pocketmanager"
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 1

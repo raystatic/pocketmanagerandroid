@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.pocketmanager">
+    package="com.walletLog.pocketmanager">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -12,17 +12,17 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".userflow.UserFlowActivity"></activity>
-        <activity android:name=".utils.BaseActivity" />
-        <activity android:name=".home.ui.HomeActivity" />
-        <activity android:name=".authentication.LoginActivity">
+        <activity android:name="com.walletLog.pocketmanager.userflow.UserFlowActivity"></activity>
+        <activity android:name="com.walletLog.pocketmanager.utils.BaseActivity" />
+        <activity android:name="com.walletLog.pocketmanager.home.ui.HomeActivity" />
+        <activity android:name="com.walletLog.pocketmanager.authentication.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".authentication.RegisterActivity" />
+        <activity android:name="com.walletLog.pocketmanager.authentication.RegisterActivity" />
 
         <service
             android:name="com.novoda.merlin.MerlinService"

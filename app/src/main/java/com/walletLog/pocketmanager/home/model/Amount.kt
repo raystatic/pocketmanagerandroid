@@ -1,4 +1,4 @@
-package com.example.pocketmanager.home.model
+package com.walletLog.pocketmanager.home.model
 
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties

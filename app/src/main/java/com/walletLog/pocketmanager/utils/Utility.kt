@@ -1,14 +1,12 @@
-package com.example.pocketmanager.utils
+package com.walletLog.pocketmanager.utils
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import com.example.pocketmanager.home.model.Transaction
+import com.walletLog.pocketmanager.home.model.Transaction
 import com.google.android.material.snackbar.Snackbar
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit

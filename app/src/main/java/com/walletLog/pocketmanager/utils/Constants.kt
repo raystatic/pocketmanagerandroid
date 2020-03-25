@@ -1,4 +1,4 @@
-package com.example.pocketmanager.utils
+package com.walletLog.pocketmanager.utils
 
 class Constants {
     companion object{

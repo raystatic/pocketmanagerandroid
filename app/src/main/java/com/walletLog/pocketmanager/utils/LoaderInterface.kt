@@ -1,4 +1,4 @@
-package com.example.pocketmanager.utils
+package com.walletLog.pocketmanager.utils
 
 interface LoaderInterface {
     fun showLoader()

@@ -1,15 +1,14 @@
-package com.example.pocketmanager.authentication
+package com.walletLog.pocketmanager.authentication
 
 import android.app.ProgressDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
-import com.example.pocketmanager.home.ui.HomeActivity
-import com.example.pocketmanager.utils.LoaderInterface
-import com.example.pocketmanager.R
-import com.example.pocketmanager.utils.BaseActivity
+import com.walletLog.pocketmanager.home.ui.HomeActivity
+import com.walletLog.pocketmanager.utils.LoaderInterface
+import com.walletLog.pocketmanager.R
+import com.walletLog.pocketmanager.utils.BaseActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*

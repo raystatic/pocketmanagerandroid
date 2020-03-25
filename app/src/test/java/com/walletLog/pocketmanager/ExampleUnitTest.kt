@@ -1,4 +1,4 @@
-package com.example.pocketmanager
+package com.walletLog.pocketmanager
 
 import org.junit.Test
 

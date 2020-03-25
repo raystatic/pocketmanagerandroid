@@ -1,4 +1,4 @@
-package com.example.pocketmanager.userflow.adapter
+package com.walletLog.pocketmanager.userflow.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
-import com.example.pocketmanager.R
+import com.walletLog.pocketmanager.R
 
 class CustomPagerAdapter(var context: Context,var pager: ArrayList<Int>, var textList:ArrayList<String>): PagerAdapter() {
 

@@ -1,4 +1,4 @@
-package com.example.pocketmanager.home.ui
+package com.walletLog.pocketmanager.home.ui
 
 import android.app.AlertDialog
 import android.content.Context
@@ -6,12 +6,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
-import com.example.pocketmanager.R
-import com.example.pocketmanager.userflow.UserFlowActivity
-import com.example.pocketmanager.utils.BaseActivity
-import com.example.pocketmanager.utils.Constants
-import com.example.pocketmanager.utils.GenerateRandomString
-import com.example.pocketmanager.utils.PrefManager
+import com.walletLog.pocketmanager.R
+import com.walletLog.pocketmanager.userflow.UserFlowActivity
+import com.walletLog.pocketmanager.utils.BaseActivity
+import com.walletLog.pocketmanager.utils.Constants
+import com.walletLog.pocketmanager.utils.GenerateRandomString
+import com.walletLog.pocketmanager.utils.PrefManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_home.*

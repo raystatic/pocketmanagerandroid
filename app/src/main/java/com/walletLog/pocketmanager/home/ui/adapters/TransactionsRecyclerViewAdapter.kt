@@ -1,21 +1,16 @@
-package com.example.pocketmanager.home.ui.adapters
+package com.walletLog.pocketmanager.home.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pocketmanager.R
-import com.example.pocketmanager.home.model.Transaction
-import com.example.pocketmanager.utils.Utility
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import com.walletLog.pocketmanager.R
+import com.walletLog.pocketmanager.home.model.Transaction
+import com.walletLog.pocketmanager.utils.Utility
 import com.google.firebase.database.DatabaseReference
-import java.util.*
 import kotlin.collections.ArrayList
 
 

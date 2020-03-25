@@ -1,18 +1,17 @@
-package com.example.pocketmanager.userflow
+package com.walletLog.pocketmanager.userflow
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
-import com.example.pocketmanager.R
-import com.example.pocketmanager.home.ui.HomeActivity
-import com.example.pocketmanager.userflow.adapter.CustomPagerAdapter
-import com.example.pocketmanager.utils.BaseActivity
-import com.example.pocketmanager.utils.Constants
-import com.example.pocketmanager.utils.PrefManager
+import com.walletLog.pocketmanager.R
+import com.walletLog.pocketmanager.home.ui.HomeActivity
+import com.walletLog.pocketmanager.userflow.adapter.CustomPagerAdapter
+import com.walletLog.pocketmanager.utils.BaseActivity
+import com.walletLog.pocketmanager.utils.Constants
+import com.walletLog.pocketmanager.utils.PrefManager
 import kotlinx.android.synthetic.main.activity_user_flow.*
 
 
