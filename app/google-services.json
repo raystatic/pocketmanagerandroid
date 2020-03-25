@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:430723959822:android:61d18e7d74dd6afb8bc05f",
         "android_client_info": {
-          "package_name": "com.example.pocketmanager"
+          "package_name": "com.walletLog.pocketmanager"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "430723959822-o9qc2g6rpnfpjkomuc4vq0toccf8tu7g.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.pocketmanager",
+            "package_name": "com.walletLog.pocketmanager",
             "certificate_hash": "d69e17fab833ecdd16b6c2b7abbfcf3b3e19196a"
           }
         },
